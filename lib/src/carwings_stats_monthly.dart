@@ -40,6 +40,7 @@ class CarwingsStatsMonthly {
       this.totalMileagePerKWh = numberFormat.format(1 /
               (double.parse(t['TotalPowerConsumptTotal']) /
                   (double.parse(t['TotalTravelDistance']) / 1000))) +
+          ' ' +
           mileageUnit +
           '/kWh';
     } else {
