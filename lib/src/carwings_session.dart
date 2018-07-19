@@ -95,7 +95,7 @@ class CarwingsSession {
     var encodedPassword;
 
     if(blowfishEncrypt != null) {
-      encodedPassword = blowfishEncrypt(response['baseprm']);
+      encodedPassword = await blowfishEncrypt(response['baseprm']);
     } else {
       encodedPassword = await _requestBlowfish(password, response['baseprm']);
     }
