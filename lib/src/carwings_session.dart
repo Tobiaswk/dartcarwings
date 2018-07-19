@@ -85,14 +85,20 @@ class CarwingsSession {
     return json;
   }
 
-  Future<CarwingsVehicle> login() async {
+  Future<CarwingsVehicle> login([Future<String> blowfishEncrypt(String encryptKey)]) async {
     loggedIn = false;
     customSessionID = '';
 
     var response = await request(
         "InitialApp.php", {"RegionCode": _region(region), "lg": "en-US"});
 
-    var encodedPassword = await _requestBlowfish(password, response['baseprm']);
+    var encodedPassword;
+
+    if(blowfishEncrypt != null) {
+      encodedPassword = blowfishEncrypt(response['baseprm']);
+    } else {
+      encodedPassword = await _requestBlowfish(password, response['baseprm']);
+    }
 
     response = await request("UserLoginRequest.php", {
       "RegionCode": _region(region),
