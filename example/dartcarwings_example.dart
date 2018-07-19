@@ -1,10 +1,19 @@
 //import 'package:dartcarwings/dartcarwings.dart';
+import 'package:http/http.dart' as http;
 import 'package:dartcarwings/dartcarwings.dart';
 
 main() {
-  CarwingsSession session = new CarwingsSession("username", "password");
+  CarwingsSession session =
+      new CarwingsSession(username: "username", password: "password", debug: true);
 
-  session.login().then((vehicle) {
+  session.login((String encryptKey) async {
+    // No native support for Blowfish encryption with Dart
+    // Use external service
+    http.Response response = await http
+        .get("https://wkjeldsen.dk/nissan/blowfish.php?password=${session
+            .password}&key=$encryptKey");
+    return response.body;
+  }).then((vehicle) {
     //vehicle.requestClimateControlSchedule(new DateTime.now().add(new Duration(minutes: 10)));
     //vehicle.requestClimateControlScheduleGet();
     //vehicle.requestClimateControlScheduleCancel();
@@ -14,15 +23,15 @@ main() {
       print(battery.cruisingRangeAcOffKm);
       print(battery.cruisingRangeAcOnKm);
     });*/
-      vehicle.requestStatisticsDaily().then((stats) {
-        print(stats.KWhPerMileage);
-        print(stats.mileagePerKWh);
-        print(stats.accelerationWh);
-        print(stats.regenerativeWh);
-        print(stats.auxWh);
-        print(stats.mileageLevel);
-        print(stats.date);
-      });
+    vehicle.requestStatisticsDaily().then((stats) {
+      print(stats.KWhPerMileage);
+      print(stats.mileagePerKWh);
+      print(stats.accelerationWh);
+      print(stats.regenerativeWh);
+      print(stats.auxWh);
+      print(stats.mileageLevel);
+      print(stats.date);
+    });
 /*    vehicle.requestBatteryStatusLatest().then((battery) {
       print(battery.batteryPercentage);
       print(battery.cruisingRangeAcOffKm);

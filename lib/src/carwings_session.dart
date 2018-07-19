@@ -29,25 +29,11 @@ class CarwingsSession {
   var language;
   var dcmId;
 
+  var blowfishEncryptCallback;
+
   CarwingsVehicle vehicle;
 
-  CarwingsSession(this.username, this.password, [this.region = CarwingsRegion.Europe, this.debug = false]);
-
-  String _pkcs5Padding(String data) {
-    int byteNum = data.length;
-    int packingLength = 8 - byteNum % 8;
-    return data.padRight(byteNum + packingLength, "$packingLength");
-  }
-
-  // pkcs5 padding
-  // and blowfish encryption is sadly done server-side
-  // due to missing support in Dart
-  _requestBlowfish(String password, String key) async {
-    http.Response response = await http.get(
-        "https://wkjeldsen.dk/nissan/blowfish.php?password=$password&key=$key");
-
-    return response.body;
-  }
+  CarwingsSession({this.username, this.password, this.region = CarwingsRegion.Europe, this.debug = false});
 
   dynamic requestWithRetry(String endpoint, Map params) async {
     dynamic response = await request(endpoint, params);
@@ -55,9 +41,9 @@ class CarwingsSession {
     var status = response['status'];
 
     if (status != null && status >= 400) {
-      print('carwings error; logging in and trying request again: $response');
+      _print('carwings error; logging in and trying request again: $response');
 
-      login();
+      login(blowfishEncryptCallback);
 
       response = await request(endpoint, params);
     }
@@ -72,33 +58,29 @@ class CarwingsSession {
       params['custom_sessionid'] = '';
     }
 
-    print('invoking carwings API: $endpoint');
-    print('params: $params');
+    _print('invoking carwings API: $endpoint');
+    _print('params: $params');
 
     http.Response response =
         await http.post("${baseUrl}${endpoint}", body: params);
 
     dynamic json = JSON.decode(response.body);
 
-    print('result: $json');
+    _print('result: $json');
 
     return json;
   }
 
-  Future<CarwingsVehicle> login([Future<String> blowfishEncrypt(String encryptKey)]) async {
+  Future<CarwingsVehicle> login(Future<String> blowfishEncryptCallback(String encryptKey)) async {
+    this.blowfishEncryptCallback = blowfishEncryptCallback;
+
     loggedIn = false;
     customSessionID = '';
 
     var response = await request(
         "InitialApp.php", {"RegionCode": _region(region), "lg": "en-US"});
 
-    var encodedPassword;
-
-    if(blowfishEncrypt != null) {
-      encodedPassword = await blowfishEncrypt(response['baseprm']);
-    } else {
-      encodedPassword = await _requestBlowfish(password, response['baseprm']);
-    }
+    var encodedPassword = await blowfishEncryptCallback(response['baseprm']);
 
     response = await request("UserLoginRequest.php", {
       "RegionCode": _region(region),
@@ -156,6 +138,12 @@ class CarwingsSession {
         return "NML";
       default:
         return "NE";
+    }
+  }
+
+  _print(message) {
+    if(debug) {
+      print(message);
     }
   }
 }
