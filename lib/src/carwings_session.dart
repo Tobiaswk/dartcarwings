@@ -79,7 +79,7 @@ class CarwingsSession {
       {String username,
       String password,
       CarwingsRegion region = CarwingsRegion.Europe,
-      Future<String> blowfishEncryptCallback(String encryptKey, String password)}) async {
+      Future<String> blowfishEncryptCallback(String key, String password)}) async {
     this.username = username;
     this.password = password;
     this.blowfishEncryptCallback = blowfishEncryptCallback;

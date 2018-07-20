@@ -9,11 +9,11 @@ main() {
       .login(
           username: "username",
           password: "password",
-          blowfishEncryptCallback: (String encryptKey, password) async {
+          blowfishEncryptCallback: (String key, password) async {
             // No native support for Blowfish encryption with Dart
             // Use external service
             http.Response response = await http.get(
-                "https://wkjeldsen.dk/nissan/blowfish.php?password=$password&key=$encryptKey");
+                "https://wkjeldsen.dk/nissan/blowfish.php?password=$password&key=$key");
             return response.body;
           })
       .then((vehicle) {
