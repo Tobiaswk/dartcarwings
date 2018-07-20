@@ -17,6 +17,7 @@ class CarwingsSession {
   final String initialAppStrings = "geORNtsZe5I4lRGjG9GZiA";
 
   bool debug;
+  List<String> debugLog = new List<String>();
 
   var username;
   var password;
@@ -144,6 +145,7 @@ class CarwingsSession {
   _print(message) {
     if(debug) {
       print(message);
+      debugLog.add(message);
     }
   }
 }
