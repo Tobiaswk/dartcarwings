@@ -34,7 +34,7 @@ class CarwingsSession {
 
   CarwingsVehicle vehicle;
 
-  CarwingsSession({this.username, this.password, this.region = CarwingsRegion.Europe, this.debug = false});
+  CarwingsSession({this.debug = false});
 
   dynamic requestWithRetry(String endpoint, Map params) async {
     dynamic response = await request(endpoint, params);
@@ -44,7 +44,10 @@ class CarwingsSession {
     if (status != null && status >= 400) {
       _print('carwings error; logging in and trying request again: $response');
 
-      login(blowfishEncryptCallback);
+      login(
+          username: username,
+          password: password,
+          blowfishEncryptCallback: blowfishEncryptCallback);
 
       response = await request(endpoint, params);
     }
@@ -72,7 +75,13 @@ class CarwingsSession {
     return json;
   }
 
-  Future<CarwingsVehicle> login(Future<String> blowfishEncryptCallback(String encryptKey)) async {
+  Future<CarwingsVehicle> login(
+      {String username,
+      String password,
+      CarwingsRegion region = CarwingsRegion.Europe,
+      Future<String> blowfishEncryptCallback(String encryptKey, String password)}) async {
+    this.username = username;
+    this.password = password;
     this.blowfishEncryptCallback = blowfishEncryptCallback;
 
     loggedIn = false;
@@ -81,7 +90,7 @@ class CarwingsSession {
     var response = await request(
         "InitialApp.php", {"RegionCode": _region(region), "lg": "en-US"});
 
-    var encodedPassword = await blowfishEncryptCallback(response['baseprm']);
+    var encodedPassword = await blowfishEncryptCallback(response['baseprm'], password);
 
     response = await request("UserLoginRequest.php", {
       "RegionCode": _region(region),
@@ -89,7 +98,7 @@ class CarwingsSession {
       "Password": encodedPassword
     });
 
-    if(response['status'] != 200) {
+    if (response['status'] != 200) {
       throw 'Login error';
     }
 
@@ -143,7 +152,7 @@ class CarwingsSession {
   }
 
   _print(message) {
-    if(debug) {
+    if (debug) {
       print(message);
       debugLog.add(message);
     }

@@ -3,17 +3,20 @@ import 'package:http/http.dart' as http;
 import 'package:dartcarwings/dartcarwings.dart';
 
 main() {
-  CarwingsSession session =
-      new CarwingsSession(username: "username", password: "password", debug: true);
+  CarwingsSession session = new CarwingsSession(debug: true);
 
-  session.login((String encryptKey) async {
-    // No native support for Blowfish encryption with Dart
-    // Use external service
-    http.Response response = await http
-        .get("https://wkjeldsen.dk/nissan/blowfish.php?password=${session
-            .password}&key=$encryptKey");
-    return response.body;
-  }).then((vehicle) {
+  session
+      .login(
+          username: "username",
+          password: "password",
+          blowfishEncryptCallback: (String encryptKey, password) async {
+            // No native support for Blowfish encryption with Dart
+            // Use external service
+            http.Response response = await http.get(
+                "https://wkjeldsen.dk/nissan/blowfish.php?password=$password&key=$encryptKey");
+            return response.body;
+          })
+      .then((vehicle) {
     //vehicle.requestClimateControlSchedule(new DateTime.now().add(new Duration(minutes: 10)));
     //vehicle.requestClimateControlScheduleGet();
     //vehicle.requestClimateControlScheduleCancel();
