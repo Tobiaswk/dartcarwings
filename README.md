@@ -11,9 +11,17 @@ A simple usage example:
     import 'package:dartcarwings/dartcarwings.dart';
 
     main() {
-      CarwingsSession session = new CarwingsSession("username", "password");
+      CarwingsSession session = new CarwingsSession(debug: true);
 
-      session.login().then((vehicle) {
+      session
+        .login(
+           username: "username",
+           password: "password",
+           blowfishEncryptCallback: (String key, password) async {
+             // No native support for Blowfish encryption with Dart
+             // Use external service
+           })
+        .then((vehicle) {
         vehicle.requestBatteryStatus().then((battery) {
             print(battery.batteryPercentage);
             print(battery.cruisingRangeAcOffKm);
