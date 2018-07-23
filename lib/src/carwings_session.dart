@@ -44,7 +44,7 @@ class CarwingsSession {
     if (status != null && status >= 400) {
       _print('carwings error; logging in and trying request again: $response');
 
-      login(
+      await login(
           username: username,
           password: password,
           blowfishEncryptCallback: blowfishEncryptCallback);
