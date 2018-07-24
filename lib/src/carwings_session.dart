@@ -36,7 +36,7 @@ class CarwingsSession {
 
   CarwingsSession({this.debug = false});
 
-  dynamic requestWithRetry(String endpoint, Map params) async {
+  Future<dynamic> requestWithRetry(String endpoint, Map params) async {
     dynamic response = await request(endpoint, params);
 
     var status = response['status'];
@@ -54,7 +54,7 @@ class CarwingsSession {
     return response;
   }
 
-  dynamic request(String endpoint, Map params) async {
+  Future<dynamic> request(String endpoint, Map params) async {
     params['initial_app_strings'] = initialAppStrings;
     if (customSessionID != null) {
       params['custom_sessionid'] = customSessionID;
