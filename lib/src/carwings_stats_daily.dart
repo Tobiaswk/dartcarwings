@@ -23,12 +23,20 @@ class CarwingsStatsDaily {
     this.electricCostScale =
         params["DriveAnalysisBasicScreenResponsePersonalData"]
             ["ElectricCostScale"];
+    // For some reason electricCostScale can vary from country to country
     if (electricCostScale == 'kWh/km') {
       this.KWhPerMileage =
           numberFormat.format(double.parse(summary['ElectricMileage'])) +
               ' kWh/km';
       this.mileagePerKWh =
           numberFormat.format((1 / double.parse(summary['ElectricMileage']))) +
+              ' km/kWh';
+    } else if (electricCostScale == 'km/kWh') {
+      this.KWhPerMileage =
+          numberFormat.format(1 / (double.parse(summary['ElectricMileage']))) +
+              ' kWh/km';
+      this.mileagePerKWh =
+          numberFormat.format(double.parse(summary['ElectricMileage'])) +
               ' km/kWh';
     } else {
       this.KWhPerMileage =

@@ -22,8 +22,14 @@ class CarwingsVehicle {
 
   CarwingsVehicle(CarwingsSession session, Map params) {
     this._session = session;
-    this.vin = params["VehicleInfoList"]["vehicleInfo"][0]["vin"];
-    this.nickname = params["VehicleInfoList"]["vehicleInfo"][0]["nickname"];
+    this.vin = params["vehicle"]["profile"]["vin"];
+    // For some odd reason VehicleInfoList is not present on 1th gen Leafs
+    // It is only there for 2nd gen Leafs
+    if (params["VehicleInfoList"] != null) {
+      this.nickname = params["VehicleInfoList"]["vehicleInfo"][0]["nickname"];
+    } else {
+      this.nickname = params["vehicleInfo"][0]['nickname'];
+    }
     this._boundTime =
         params["CustomerInfo"]["VehicleInfo"]["UserVehicleBoundTime"];
     this.model = params['CustomerInfo']['VehicleInfo']['CarName'];
@@ -139,7 +145,7 @@ class CarwingsVehicle {
 
   // For some weird reason ExecuteTime is always in UTC/GMT
   // regardless of tz
-  Future<bool> requestClimateControlSchedule(DateTime startTime) async {
+  Future<Null> requestClimateControlSchedule(DateTime startTime) async {
     var response =
         await _session.requestWithRetry("ACRemoteUpdateRequest.php", {
       "RegionCode": _session.getRegion(),
@@ -150,12 +156,12 @@ class CarwingsVehicle {
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
     });
     if (response['status'] == 200) {
-      return true;
+      return;
     }
-    return false;
+    throw 'Error';
   }
 
-  Future<bool> requestClimateControlScheduleCancel() async {
+  Future<Null> requestClimateControlScheduleCancel() async {
     var response =
         await _session.requestWithRetry("ACRemoteCancelRequest.php", {
       "RegionCode": _session.getRegion(),
@@ -165,9 +171,9 @@ class CarwingsVehicle {
       "tz": _session.tz
     });
     if (response['status'] == 200) {
-      return true;
+      return;
     }
-    return false;
+    throw 'Error';
   }
 
   // For some weird reason DisplayExecuteTime returns time in local time zone
@@ -187,12 +193,12 @@ class CarwingsVehicle {
             .parse(response['DisplayExecuteTime']);
       }
     }
-    return null;
+    throw 'Error';
   }
 
   // For some weird reason ExecuteTime is always in UTC/GMT
   // regardless of tz
-  Future<bool> requestChargingStart(DateTime startTime) async {
+  Future<Null> requestChargingStart(DateTime startTime) async {
     var response =
         await _session.requestWithRetry("BatteryRemoteChargingRequest.php", {
       "RegionCode": _session.getRegion(),
@@ -203,9 +209,9 @@ class CarwingsVehicle {
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
     });
     if (response['status'] == 200) {
-      return true;
+      return;
     }
-    return false;
+    throw 'Error';
   }
 
   Future<CarwingsStatsMonthly> requestStatisticsMonthly(DateTime month) async {
@@ -221,7 +227,7 @@ class CarwingsVehicle {
     if (response['status'] == 200) {
       return new CarwingsStatsMonthly(response);
     }
-    return null;
+    throw 'Error';
   }
 
   Future<CarwingsStatsDaily> requestStatisticsDaily() async {
@@ -236,7 +242,7 @@ class CarwingsVehicle {
     if (response['status'] == 200) {
       return new CarwingsStatsDaily(response);
     }
-    return null;
+    throw 'Error';
   }
 
   Future<CarwingsHVAC> requestHVACStatus() async {
@@ -252,7 +258,7 @@ class CarwingsVehicle {
     if (response['status'] == 200) {
       return new CarwingsHVAC(response);
     }
-    return null;
+    throw 'Error';
   }
 
   Future<CarwingsBattery> requestBatteryStatusLatest() async {
@@ -268,7 +274,7 @@ class CarwingsVehicle {
     if (response['status'] == 200) {
       return new CarwingsBattery.batteryLatest(response);
     }
-    return null;
+    throw 'Error';
   }
 
   Future<CarwingsLocation> requestLocation() async {

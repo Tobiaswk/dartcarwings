@@ -1,6 +1,6 @@
 # dartcarwings
 
-A library for the Nissan Leaf Carwings API.
+A Dart library for the Nissan Leaf Carwings API.
 
 Through the Carwings API you can ask your vehicle for the latest data, see current battery and charging statuses, see the current climate control state, start or stop climate control remotely, remotely start charging, and retrieve the last known location of the vehicle.
 
@@ -17,7 +17,7 @@ A simple usage example:
         .login(
            username: "username",
            password: "password",
-           blowfishEncryptCallback: (String key, password) async {
+           blowfishEncryptCallback: (String key, String password) async {
              // No native support for Blowfish encryption with Dart
              // Use external service
            })
@@ -26,6 +26,6 @@ A simple usage example:
                 print(battery.batteryPercentage);
                 print(battery.cruisingRangeAcOffKm);
                 print(battery.cruisingRangeAcOnKm);
+            });
         });
-      });
     }

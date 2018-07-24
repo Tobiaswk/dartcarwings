@@ -25,7 +25,7 @@ main() {
       print(battery.cruisingRangeAcOffKm);
       print(battery.cruisingRangeAcOnKm);
     });*/
-    vehicle.requestStatisticsDaily().then((stats) {
+/*    vehicle.requestStatisticsDaily().then((stats) {
       print(stats.KWhPerMileage);
       print(stats.mileagePerKWh);
       print(stats.accelerationWh);
@@ -33,14 +33,14 @@ main() {
       print(stats.auxWh);
       print(stats.mileageLevel);
       print(stats.date);
-    });
-/*    vehicle.requestBatteryStatusLatest().then((battery) {
+    });*/
+    vehicle.requestBatteryStatusLatest().then((battery) {
       print(battery.batteryPercentage);
       print(battery.cruisingRangeAcOffKm);
       print(battery.cruisingRangeAcOnKm);
       print(battery.timeToFullTrickle.inHours);
       print(battery.timeToFullL2_6kw.inHours);
-    });*/
+    });
     //leaf.requestClimateControlOff().then((_) => print('climate control off'));
 /*    vehicle.requestStatisticsMonthly(new DateTime(2018, 7)).then((stats) {
       if(stats != null) {

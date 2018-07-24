@@ -7,11 +7,15 @@ class CarwingsHVAC {
   CarwingsHVAC(Map params) {
     var racr = params['RemoteACRecords'];
 
-    this.isRunning = racr['OperationResult'] != null &&
+    // Sometimes racr is simply empty
+    // If it is empty HVAC is not on (an assumption)
+    this.isRunning = racr.length > 0 && racr['OperationResult'] != null &&
         racr['OperationResult'].toString().startsWith('START') &&
         racr['RemoteACOperation'] == 'START';
-    this.preACTemp = racr['PreAC_temp'];
-    this.preACTempUnit = racr['PreAC_unit'];
-    this.incTemp = racr['Inc_temp'];
+    if(racr.length > 0) {
+      this.preACTemp = racr['PreAC_temp'];
+      this.preACTempUnit = racr['PreAC_unit'];
+      this.incTemp = racr['Inc_temp'];
+    }
   }
 }

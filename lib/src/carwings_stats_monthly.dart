@@ -26,6 +26,7 @@ class CarwingsStatsMonthly {
     this.totalConsumptionKWh =
         numberFormat.format(double.parse(t['TotalPowerConsumptTotal'])) +
             ' kWh';
+    // For some reason electricCostScale can vary from country to country
     if (electricCostScale == 'kWh/km') {
       this.mileageUnit = 'km';
       this.totalTravelDistanceMileage = new NumberFormat('0')
@@ -40,6 +41,22 @@ class CarwingsStatsMonthly {
       this.totalMileagePerKWh = numberFormat.format(1 /
               (double.parse(t['TotalPowerConsumptTotal']) /
                   (double.parse(t['TotalTravelDistance']) / 1000))) +
+          ' ' +
+          mileageUnit +
+          '/kWh';
+    } else if (electricCostScale == 'km/kWh') {
+      this.mileageUnit = 'km';
+      this.totalTravelDistanceMileage = new NumberFormat('0')
+          .format(double.parse(t['TotalTravelDistance']) / 1000) +
+          ' ' +
+          mileageUnit;
+      this.totalkWhPerMileage = numberFormat.format( 1 /
+          (double.parse(t['TotalPowerConsumptTotal']) /
+              (double.parse(t['TotalTravelDistance']) / 1000))) +
+          ' kWh/'+ mileageUnit;
+      this.totalMileagePerKWh = numberFormat.format(
+          double.parse(t['TotalPowerConsumptTotal']) /
+              (double.parse(t['TotalTravelDistance']) / 1000)) +
           ' ' +
           mileageUnit +
           '/kWh';

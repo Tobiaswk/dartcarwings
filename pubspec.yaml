@@ -1,7 +1,7 @@
 name: dartcarwings
 description: A library for the Nissan Leaf Carwings API.
 version: 0.0.1
-homepage: https://bitbucket.org/Tobiaswk/dartcarwings
+homepage: https://gitlab.com/tobiaswkjeldsen/dartcarwings
 author: Tobias Westergaard Kjeldsen <tobias@wkjeldsen.dk>
 
 environment:
