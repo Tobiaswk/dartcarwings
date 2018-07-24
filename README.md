@@ -22,10 +22,10 @@ A simple usage example:
              // Use external service
            })
         .then((vehicle) {
-        vehicle.requestBatteryStatus().then((battery) {
-            print(battery.batteryPercentage);
-            print(battery.cruisingRangeAcOffKm);
-            print(battery.cruisingRangeAcOnKm);
+            vehicle.requestBatteryStatus().then((battery) {
+                print(battery.batteryPercentage);
+                print(battery.cruisingRangeAcOffKm);
+                print(battery.cruisingRangeAcOnKm);
         });
       });
     }
