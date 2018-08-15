@@ -29,15 +29,29 @@ class CarwingsStatsDaily {
           numberFormat.format(double.parse(summary['ElectricMileage'])) +
               ' kWh/km';
       this.mileagePerKWh =
-          numberFormat.format((1 / double.parse(summary['ElectricMileage']))) +
+          numberFormat.format(1 / double.parse(summary['ElectricMileage'])) +
               ' km/kWh';
     } else if (electricCostScale == 'km/kWh') {
       this.KWhPerMileage =
-          numberFormat.format(1 / (double.parse(summary['ElectricMileage']))) +
+          numberFormat.format(1 / double.parse(summary['ElectricMileage'])) +
               ' kWh/km';
       this.mileagePerKWh =
           numberFormat.format(double.parse(summary['ElectricMileage'])) +
               ' km/kWh';
+    } else if (electricCostScale == 'kWh/100km') {
+      this.KWhPerMileage =
+          numberFormat.format(double.parse(summary['ElectricMileage']) / 100) +
+              ' kWh/km';
+      this.mileagePerKWh = numberFormat
+              .format(1 / (double.parse(summary['ElectricMileage']) / 100)) +
+          ' km/kWh';
+    } else if (electricCostScale == 'miles/kWh') {
+      this.KWhPerMileage =
+          numberFormat.format(1 / double.parse(summary['ElectricMileage'])) +
+              ' kWh/mi';
+      this.mileagePerKWh = numberFormat
+          .format(double.parse(summary['ElectricMileage'])) +
+          ' mi/kWh';
     } else {
       this.KWhPerMileage =
           numberFormat.format(double.parse(summary['ElectricMileage'])) +
@@ -48,10 +62,12 @@ class CarwingsStatsDaily {
     }
     this.mileageLevel = summary['ElectricMileageLevel'];
     this.accelerationWh =
-        numberFormat.format(double.parse(summary['PowerConsumptMoter'])) + ' Wh';
+        numberFormat.format(double.parse(summary['PowerConsumptMoter'])) +
+            ' Wh';
     this.accelerationLevel = summary['PowerConsumptMoterLevel'];
     this.regenerativeWh =
-        numberFormat.format(double.parse(summary['PowerConsumptMinus'])) + ' Wh';
+        numberFormat.format(double.parse(summary['PowerConsumptMinus'])) +
+            ' Wh';
     this.regenerativeLevel = summary['PowerConsumptMinusLevel'];
     this.auxWh =
         numberFormat.format(double.parse(summary['PowerConsumptAUX'])) + ' Wh';

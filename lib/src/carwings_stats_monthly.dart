@@ -47,25 +47,45 @@ class CarwingsStatsMonthly {
     } else if (electricCostScale == 'km/kWh') {
       this.mileageUnit = 'km';
       this.totalTravelDistanceMileage = new NumberFormat('0')
-          .format(double.parse(t['TotalTravelDistance']) / 1000) +
+              .format(double.parse(t['TotalTravelDistance']) / 1000) +
           ' ' +
           mileageUnit;
-      this.totalkWhPerMileage = numberFormat.format( 1 /
-          (double.parse(t['TotalPowerConsumptTotal']) /
-              (double.parse(t['TotalTravelDistance']) / 1000))) +
-          ' kWh/'+ mileageUnit;
+      this.totalkWhPerMileage = numberFormat.format(1 /
+              (double.parse(t['TotalPowerConsumptTotal']) /
+                  (double.parse(t['TotalTravelDistance']) / 1000))) +
+          ' kWh/' +
+          mileageUnit;
       this.totalMileagePerKWh = numberFormat.format(
-          double.parse(t['TotalPowerConsumptTotal']) /
-              (double.parse(t['TotalTravelDistance']) / 1000)) +
+              double.parse(t['TotalPowerConsumptTotal']) /
+                  (double.parse(t['TotalTravelDistance']) / 1000)) +
           ' ' +
           mileageUnit +
           '/kWh';
-    } else {
+    } else if (electricCostScale == 'kWh/100km') {
+      this.mileageUnit = 'km';
+      this.totalTravelDistanceMileage = new NumberFormat('0')
+              .format(double.parse(t['TotalTravelDistance']) / 1000) +
+          ' ' +
+          mileageUnit;
+      this.totalkWhPerMileage = numberFormat.format(
+              double.parse(t['TotalPowerConsumptTotal']) /
+                  (double.parse(t['TotalTravelDistance']) / 1000)) +
+          ' kWh/' +
+          mileageUnit;
+      this.totalMileagePerKWh = numberFormat.format(1 /
+              (double.parse(t['TotalPowerConsumptTotal']) /
+                  (double.parse(t['TotalTravelDistance']) / 1000))) +
+          ' ' +
+          mileageUnit +
+          '/kWh';
+    } else if (electricCostScale == 'miles/kWh') {
       this.mileageUnit = 'mi';
       this.totalTravelDistanceMileage = new NumberFormat('0')
               .format(double.parse(t['TotalTravelDistance']) * 0.0006213712) +
           ' ' +
           mileageUnit;
+      // For some odd reason it seems with miles/kWh that the values returned are
+      // actually swapped to kWh/miles; I'm lost for words
       this.totalkWhPerMileage = numberFormat.format(
               double.parse(t['TotalPowerConsumptTotal']) /
                   (double.parse(t['TotalTravelDistance']) * 0.0006213712)) +
@@ -74,6 +94,24 @@ class CarwingsStatsMonthly {
       this.totalMileagePerKWh = numberFormat.format(1 /
               (double.parse(t['TotalPowerConsumptTotal']) /
                   (double.parse(t['TotalTravelDistance']) * 0.0006213712))) +
+          ' ' +
+          mileageUnit +
+          '/kWh';
+    } else /*if(electricCostScale == 'kWh/miles')*/ {
+      this.mileageUnit = 'mi';
+      this.totalTravelDistanceMileage = new NumberFormat('0')
+              .format(double.parse(t['TotalTravelDistance']) * 0.0006213712) +
+          ' ' +
+          mileageUnit;
+      this.totalkWhPerMileage = numberFormat.format(1 /
+              (double.parse(t['TotalPowerConsumptTotal']) /
+                  (double.parse(t['TotalTravelDistance']) * 0.0006213712))) +
+          ' kWh/' +
+          mileageUnit;
+      this.totalMileagePerKWh = numberFormat.format(
+              double.parse(t['TotalPowerConsumptTotal']) /
+                  (double.parse(t['TotalTravelDistance']) * 0.0006213712)) +
+          ' ' +
           mileageUnit +
           '/kWh';
     }
