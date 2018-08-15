@@ -8,7 +8,7 @@ main() {
       .login(
           username: "username",
           password: "password",
-          blowfishEncryptCallback: (String key, password) async {
+          blowfishEncryptCallback: (String key, String password) async {
             // No native support for Blowfish encryption with Dart
             // Use external service
             http.Response response = await http.get(
