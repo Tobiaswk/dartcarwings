@@ -4,7 +4,7 @@ class CarwingsStatsMonthly {
   DateTime month;
   String electricCostScale;
   String mileageUnit;
-  int totalNumberOfTrips;
+  String totalNumberOfTrips;
   String totalkWhPerMileage;
   String totalMileagePerKWh;
   String totalConsumptionKWh;
@@ -22,7 +22,7 @@ class CarwingsStatsMonthly {
             ['ElectricCostScale'];
 
     this.month = new DateFormat('MMM/y').parse(r['DisplayMonth']);
-    this.totalNumberOfTrips = int.parse(t['TotalNumberOfTrips']);
+    this.totalNumberOfTrips = t['TotalNumberOfTrips'];
     this.totalConsumptionKWh =
         numberFormat.format(double.parse(t['TotalPowerConsumptTotal'])) +
             ' kWh';
