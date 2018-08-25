@@ -99,7 +99,10 @@ class CarwingsBattery {
         new Duration(minutes: _timeRemaining(recs['TimeRequiredToFull200']));
     this.timeToFullL2_6kw = new Duration(
         minutes: _timeRemaining(recs['TimeRequiredToFull200_6kW']));
-    if(timeToFullTrickle.inHours != 0) {
+    if(isQuickCharging) {
+      chargingkWLevelText = "left to charge at ~40kW";
+      chargingRemainingText = "usually 50 mins";
+    } else if(timeToFullTrickle.inHours != 0) {
       chargingkWLevelText = "left to charge at ~1kW";
       chargingRemainingText = "${(timeToFullTrickle.inMinutes / 60).floor()} hrs ${timeToFullTrickle.inMinutes % 60} mins";
     } else if (timeToFullL2.inHours != 0) {
@@ -108,9 +111,6 @@ class CarwingsBattery {
     } else if (timeToFullL2_6kw.inHours != 0) {
       chargingkWLevelText = "left to charge at ~6kW";
       chargingRemainingText = "${(timeToFullL2_6kw.inMinutes / 60).floor()} hrs ${timeToFullL2_6kw.inMinutes % 60} mins";
-    } else if(isQuickCharging) {
-      chargingkWLevelText = "left to charge at ~40kW";
-      chargingRemainingText = "usually 50 mins";
     }
   }
 
