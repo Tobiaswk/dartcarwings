@@ -81,6 +81,14 @@ class CarwingsBattery {
             .format((this.batteryLevel * 100) / this.batteryLevelCapacity)
             .toString() +
         '%';
+    // For some reason unknown the calculated batteryPercentage based on
+    // batteryLevel bs['BatteryRemainingAmount']  and batteryLevelCapacity bs['BatteryCapacity']
+    // can vary a lot from SOC bs['SOC']['Value']
+    if (bs['SOC'] != null && bs['SOC']['Value'] != null) {
+      double SOC = double.parse(bs['SOC']['Value']);
+      this.batteryPercentage =
+          new NumberFormat('0.0').format(SOC).toString() + '%';
+    }
     this.cruisingRangeAcOffKm =
         numberFormat.format(double.parse(recs['CruisingRangeAcOff']) / 1000) +
             ' km';
@@ -99,18 +107,24 @@ class CarwingsBattery {
         new Duration(minutes: _timeRemaining(recs['TimeRequiredToFull200']));
     this.timeToFullL2_6kw = new Duration(
         minutes: _timeRemaining(recs['TimeRequiredToFull200_6kW']));
-    if(isQuickCharging) {
+    if (isQuickCharging) {
       chargingkWLevelText = "left to charge at ~40kW";
       chargingRemainingText = "usually 50 mins";
-    } else if(timeToFullTrickle.inHours != 0) {
+    } else if (timeToFullTrickle.inHours != 0) {
       chargingkWLevelText = "left to charge at ~1kW";
-      chargingRemainingText = "${(timeToFullTrickle.inMinutes / 60).floor()} hrs ${timeToFullTrickle.inMinutes % 60} mins";
+      chargingRemainingText =
+          "${(timeToFullTrickle.inMinutes / 60).floor()} hrs ${timeToFullTrickle
+          .inMinutes % 60} mins";
     } else if (timeToFullL2.inHours != 0) {
       chargingkWLevelText = "left to charge at ~3kW";
-      chargingRemainingText = "${(timeToFullL2.inMinutes / 60).floor()} hrs ${timeToFullL2.inMinutes % 60} mins";
+      chargingRemainingText =
+          "${(timeToFullL2.inMinutes / 60).floor()} hrs ${timeToFullL2.inMinutes %
+          60} mins";
     } else if (timeToFullL2_6kw.inHours != 0) {
       chargingkWLevelText = "left to charge at ~6kW";
-      chargingRemainingText = "${(timeToFullL2_6kw.inMinutes / 60).floor()} hrs ${timeToFullL2_6kw.inMinutes % 60} mins";
+      chargingRemainingText =
+          "${(timeToFullL2_6kw.inMinutes / 60).floor()} hrs ${timeToFullL2_6kw
+          .inMinutes % 60} mins";
     }
   }
 
