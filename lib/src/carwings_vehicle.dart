@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:dartcarwings/src/carwings_stats_daily.dart';
 import 'package:dartcarwings/src/carwings_hvac.dart';
@@ -71,7 +70,7 @@ class CarwingsVehicle {
       "tz": _session.tz,
       "resultKey": resultKey
     });
-    if (response['responseFlag'] == '1') {
+    if (responseFlagHandler(response)) {
       return new CarwingsBattery(response);
     }
     return null;
@@ -104,7 +103,7 @@ class CarwingsVehicle {
       "UserId": _session.gdcUserId,
       "resultKey": resultKey
     });
-    if (response['responseFlag'] == '1') {
+    if (responseFlagHandler(response)) {
       return true;
     }
     return false;
@@ -137,7 +136,7 @@ class CarwingsVehicle {
       "UserId": _session.gdcUserId,
       "resultKey": resultKey
     });
-    if (response['responseFlag'] == '1') {
+    if (responseFlagHandler(response)) {
       return true;
     }
     return false;
@@ -307,11 +306,15 @@ class CarwingsVehicle {
       "tz": _session.tz,
       "resultKey": resultKey
     });
-    if (response['responseFlag'] == '1') {
+    if (responseFlagHandler(response)) {
       return new CarwingsLocation(response['lat'], response['lng']);
     }
     return null;
   }
+
+  bool responseFlagHandler(response) => response['status'] != 200
+      ? throw 'Error'
+      : response['responseFlag'] == '1';
 
   Future<Null> waitForResponse({waitSeconds = 10}) {
     return new Future.delayed(new Duration(seconds: waitSeconds));
