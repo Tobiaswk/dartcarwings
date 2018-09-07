@@ -68,11 +68,11 @@ class CarwingsSession {
     http.Response response =
         await http.post("${baseUrl}${endpoint}", body: params);
 
-    dynamic json = JSON.decode(response.body);
+    dynamic jsonData = json.decode(response.body);
 
-    _print('result: $json');
+    _print('result: $jsonData');
 
-    return json;
+    return jsonData;
   }
 
   Future<CarwingsVehicle> login(
