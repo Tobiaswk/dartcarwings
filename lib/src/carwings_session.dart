@@ -19,6 +19,9 @@ class CarwingsSession {
   bool debug;
   List<String> debugLog = new List<String>();
 
+  // If this is set it will override the time zone returned from Carwings API
+  var timeZoneOverride;
+
   var username;
   var password;
   CarwingsRegion region;
@@ -26,7 +29,7 @@ class CarwingsSession {
   var customSessionID = '';
   bool loggedIn = false;
   var gdcUserId;
-  var tz;
+  var timeZoneProvided;
   var language;
   var dcmId;
 
@@ -34,7 +37,9 @@ class CarwingsSession {
 
   CarwingsVehicle vehicle;
 
-  CarwingsSession({this.debug = false});
+  CarwingsSession({this.debug = false, this.timeZoneOverride});
+
+  String get timeZone => timeZoneOverride != null && timeZoneOverride.isNotEmpty ? timeZoneOverride : timeZoneProvided;
 
   Future<dynamic> requestWithRetry(String endpoint, Map params) async {
     dynamic response = await request(endpoint, params);
@@ -88,12 +93,12 @@ class CarwingsSession {
     customSessionID = '';
 
     var response = await request(
-        "InitialApp.php", {"RegionCode": _region(region), "lg": "en-US"});
+        "InitialApp.php", {"RegionCode": _getRegionName(region), "lg": "en-US"});
 
     var encodedPassword = await blowfishEncryptCallback(response['baseprm'], password);
 
     response = await request("UserLoginRequest.php", {
-      "RegionCode": _region(region),
+      "RegionCode": _getRegionName(region),
       "UserId": username,
       "Password": encodedPassword
     });
@@ -113,7 +118,7 @@ class CarwingsSession {
     gdcUserId = response["vehicle"]["profile"]["gdcUserId"];
     dcmId = response["vehicle"]["profile"]["dcmId"];
     vin = response["vehicle"]["profile"]["vin"];
-    tz = response["CustomerInfo"]["Timezone"];
+    timeZoneProvided = response["CustomerInfo"]["Timezone"];
 
     loggedIn = true;
 
@@ -122,19 +127,15 @@ class CarwingsSession {
     return vehicle;
   }
 
-  CarwingsVehicle getVehicle() {
-    return vehicle;
-  }
-
-  bool isLoggedIn() {
-    return loggedIn;
+  setTimeZoneOverride(String tz) {
+    timeZoneOverride = tz;
   }
 
   String getRegion() {
-    return _region(region);
+    return _getRegionName(region);
   }
 
-  String _region(CarwingsRegion region) {
+  String _getRegionName(CarwingsRegion region) {
     switch (region) {
       case CarwingsRegion.USA:
         return "NNA";

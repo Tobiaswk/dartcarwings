@@ -45,7 +45,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "UserId": _session.gdcUserId
     });
 
@@ -67,7 +67,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "resultKey": resultKey
     });
     if (responseFlagHandler(response)) {
@@ -82,7 +82,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz
+      "tz": _session.timeZone
     });
 
     while (true) {
@@ -99,7 +99,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "UserId": _session.gdcUserId,
       "resultKey": resultKey
     });
@@ -115,7 +115,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz
+      "tz": _session.timeZone
     });
 
     while (true) {
@@ -132,7 +132,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "UserId": _session.gdcUserId,
       "resultKey": resultKey
     });
@@ -151,7 +151,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
     });
     if (response['status'] == 200) {
@@ -167,7 +167,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz
+      "tz": _session.timeZone
     });
     if (response['status'] == 200) {
       return;
@@ -184,7 +184,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz
+      "tz": _session.timeZone
     });
     if (response['status'] == 200) {
       if (response['DisplayExecuteTime'] != '') {
@@ -204,7 +204,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
     });
     if (response['status'] == 200) {
@@ -220,7 +220,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "TargetMonth": _targetMonthFormatter.format(month)
     });
     if (response['status'] == 200) {
@@ -236,7 +236,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz
+      "tz": _session.timeZone
     });
     if (response['status'] == 200) {
       return new CarwingsStatsDaily(response);
@@ -251,7 +251,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "TimeFrom": _boundTime
     });
     if (response['status'] == 200) {
@@ -267,7 +267,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "TimeFrom": _boundTime
     });
     if (response['status'] == 200) {
@@ -282,7 +282,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "UserId": _session.gdcUserId
     });
 
@@ -303,7 +303,7 @@ class CarwingsVehicle {
       "lg": _session.language,
       "DMCID": _session.dcmId,
       "VIN": vin,
-      "tz": _session.tz,
+      "tz": _session.timeZone,
       "resultKey": resultKey
     });
     if (responseFlagHandler(response)) {
