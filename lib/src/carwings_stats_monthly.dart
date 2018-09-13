@@ -50,14 +50,14 @@ class CarwingsStatsMonthly {
               .format(double.parse(t['TotalTravelDistance']) / 1000) +
           ' ' +
           mileageUnit;
-      this.totalkWhPerMileage = numberFormat.format(1 /
-              (double.parse(t['TotalPowerConsumptTotal']) /
-                  (double.parse(t['TotalTravelDistance']) / 1000))) +
-          ' kWh/' +
-          mileageUnit;
-      this.totalMileagePerKWh = numberFormat.format(
+      this.totalkWhPerMileage = numberFormat.format(
               double.parse(t['TotalPowerConsumptTotal']) /
                   (double.parse(t['TotalTravelDistance']) / 1000)) +
+          ' kWh/' +
+          mileageUnit;
+      this.totalMileagePerKWh = numberFormat.format(1 /
+              (double.parse(t['TotalPowerConsumptTotal']) /
+                  (double.parse(t['TotalTravelDistance']) / 1000))) +
           ' ' +
           mileageUnit +
           '/kWh';
@@ -108,8 +108,8 @@ class CarwingsStatsMonthly {
                   (double.parse(t['TotalTravelDistance']) * 0.0006213712)) +
           ' kWh/' +
           mileageUnit;
-      this.totalMileagePerKWh = numberFormat.format( 1 /
-          (double.parse(t['TotalPowerConsumptTotal']) /
+      this.totalMileagePerKWh = numberFormat.format(1 /
+              (double.parse(t['TotalPowerConsumptTotal']) /
                   (double.parse(t['TotalTravelDistance']) * 0.0006213712))) +
           ' ' +
           mileageUnit +
