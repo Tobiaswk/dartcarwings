@@ -51,7 +51,7 @@ class CarwingsVehicle {
 
     CarwingsBattery battery;
 
-    while (true) {
+    while (responseValidHandler(response)) {
       battery = await _getBatteryStatus(response['resultKey']);
       if (battery != null) {
         return battery;
@@ -85,7 +85,7 @@ class CarwingsVehicle {
       "tz": _session.timeZone
     });
 
-    while (true) {
+    while (responseValidHandler(response)) {
       if (await _getClimateControlOnStatus(response['resultKey'])) {
         return;
       }
@@ -118,7 +118,7 @@ class CarwingsVehicle {
       "tz": _session.timeZone
     });
 
-    while (true) {
+    while (responseValidHandler(response)) {
       if (await _getClimateControlOffStatus(response['resultKey'])) {
         return;
       }
@@ -154,10 +154,9 @@ class CarwingsVehicle {
       "tz": _session.timeZone,
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
     });
-    if (response['status'] == 200) {
+    if (responseValidHandler(response)) {
       return;
     }
-    throw 'Error';
   }
 
   Future<Null> requestClimateControlScheduleCancel() async {
@@ -169,10 +168,9 @@ class CarwingsVehicle {
       "VIN": vin,
       "tz": _session.timeZone
     });
-    if (response['status'] == 200) {
+    if (responseValidHandler(response)) {
       return;
     }
-    throw 'Error';
   }
 
   // For some weird reason DisplayExecuteTime returns time in local time zone
@@ -186,13 +184,12 @@ class CarwingsVehicle {
       "VIN": vin,
       "tz": _session.timeZone
     });
-    if (response['status'] == 200) {
+    if (responseValidHandler(response)) {
       if (response['DisplayExecuteTime'] != '') {
         return _displayExecuteTimeFormatter
             .parse(response['DisplayExecuteTime']);
       }
     }
-    throw 'Error';
   }
 
   // For some weird reason ExecuteTime is always in UTC/GMT
@@ -207,10 +204,9 @@ class CarwingsVehicle {
       "tz": _session.timeZone,
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
     });
-    if (response['status'] == 200) {
+    if (responseValidHandler(response)) {
       return;
     }
-    throw 'Error';
   }
 
   Future<CarwingsStatsMonthly> requestStatisticsMonthly(DateTime month) async {
@@ -223,10 +219,9 @@ class CarwingsVehicle {
       "tz": _session.timeZone,
       "TargetMonth": _targetMonthFormatter.format(month)
     });
-    if (response['status'] == 200) {
+    if (responseValidHandler(response)) {
       return new CarwingsStatsMonthly(response);
     }
-    throw 'Error';
   }
 
   Future<CarwingsStatsDaily> requestStatisticsDaily() async {
@@ -238,10 +233,9 @@ class CarwingsVehicle {
       "VIN": vin,
       "tz": _session.timeZone
     });
-    if (response['status'] == 200) {
+    if (responseValidHandler(response)) {
       return new CarwingsStatsDaily(response);
     }
-    throw 'Error';
   }
 
   Future<CarwingsHVAC> requestHVACStatus() async {
@@ -254,10 +248,9 @@ class CarwingsVehicle {
       "tz": _session.timeZone,
       "TimeFrom": _boundTime
     });
-    if (response['status'] == 200) {
+    if (responseValidHandler(response)) {
       return new CarwingsHVAC(response);
     }
-    throw 'Error';
   }
 
   Future<CarwingsBattery> requestBatteryStatusLatest() async {
@@ -270,10 +263,9 @@ class CarwingsVehicle {
       "tz": _session.timeZone,
       "TimeFrom": _boundTime
     });
-    if (response['status'] == 200) {
+    if (responseValidHandler(response)) {
       return new CarwingsBattery.batteryLatest(response);
     }
-    throw 'Error';
   }
 
   Future<CarwingsLocation> requestLocation() async {
@@ -286,7 +278,7 @@ class CarwingsVehicle {
       "UserId": _session.gdcUserId
     });
 
-    while (true) {
+    while (responseValidHandler(response)) {
       CarwingsLocation carwingsLocation =
           await _getLocationStatus(response['resultKey']);
       if (carwingsLocation != null) {
@@ -311,6 +303,9 @@ class CarwingsVehicle {
     }
     return null;
   }
+
+  bool responseValidHandler(response) =>
+      response['status'] != 200 ? throw 'Error' : true;
 
   bool responseFlagHandler(response) => response['status'] != 200
       ? throw 'Error'
