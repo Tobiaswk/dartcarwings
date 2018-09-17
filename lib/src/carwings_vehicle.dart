@@ -16,7 +16,7 @@ class CarwingsVehicle {
   CarwingsSession _session;
   var vin;
   var nickname;
-  var _boundTime;
+  var boundTime;
   var model;
 
   CarwingsVehicle(CarwingsSession session, Map params) {
@@ -29,13 +29,13 @@ class CarwingsVehicle {
     } else {
       this.nickname = params["vehicleInfo"][0]['nickname'];
     }
-    this._boundTime =
+    this.boundTime =
         params["CustomerInfo"]["VehicleInfo"]["UserVehicleBoundTime"];
     this.model = params['CustomerInfo']['VehicleInfo']['CarName'];
   }
 
   DateTime getLastDriven() {
-    return DateTime.parse(this._boundTime);
+    return DateTime.parse(this.boundTime);
   }
 
   Future<CarwingsBattery> requestBatteryStatus() async {
@@ -246,7 +246,7 @@ class CarwingsVehicle {
       "DMCID": _session.dcmId,
       "VIN": vin,
       "tz": _session.timeZone,
-      "TimeFrom": _boundTime
+      "TimeFrom": boundTime
     });
     if (responseValidHandler(response)) {
       return new CarwingsHVAC(response);
@@ -261,7 +261,7 @@ class CarwingsVehicle {
       "DMCID": _session.dcmId,
       "VIN": vin,
       "tz": _session.timeZone,
-      "TimeFrom": _boundTime
+      "TimeFrom": boundTime
     });
     if (responseValidHandler(response)) {
       return new CarwingsBattery.batteryLatest(response);
