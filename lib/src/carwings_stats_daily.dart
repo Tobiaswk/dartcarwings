@@ -60,17 +60,17 @@ class CarwingsStatsDaily {
           numberFormat.format((1 / double.parse(summary['ElectricMileage']))) +
               ' mi/kWh';
     }
-    this.mileageLevel = summary['ElectricMileageLevel'];
+    this.mileageLevel = summary['ElectricMileageLevel'] ?? "0";
     this.accelerationWh =
         numberFormat.format(double.parse(summary['PowerConsumptMoter'])) +
             ' Wh';
-    this.accelerationLevel = summary['PowerConsumptMoterLevel'];
+    this.accelerationLevel = summary['PowerConsumptMoterLevel'] ?? "0";
     this.regenerativeWh =
         numberFormat.format(double.parse(summary['PowerConsumptMinus'])) +
             ' Wh';
-    this.regenerativeLevel = summary['PowerConsumptMinusLevel'];
+    this.regenerativeLevel = summary['PowerConsumptMinusLevel'] ?? "0";
     this.auxWh =
         numberFormat.format(double.parse(summary['PowerConsumptAUX'])) + ' Wh';
-    this.auxLevel = summary['PowerConsumptAUXLevel'];
+    this.auxLevel = summary['PowerConsumptAUXLevel'] ?? "0";
   }
 }
