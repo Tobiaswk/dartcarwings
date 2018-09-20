@@ -39,7 +39,9 @@ class CarwingsSession {
 
   CarwingsSession({this.debug = false, this.timeZoneOverride});
 
-  String get timeZone => timeZoneOverride != null && timeZoneOverride.isNotEmpty ? timeZoneOverride : timeZoneProvided;
+  String get timeZone => timeZoneOverride != null && timeZoneOverride.isNotEmpty
+      ? timeZoneOverride
+      : timeZoneProvided;
 
   Future<dynamic> requestWithRetry(String endpoint, Map params) async {
     dynamic response = await request(endpoint, params);
@@ -84,7 +86,8 @@ class CarwingsSession {
       {String username,
       String password,
       CarwingsRegion region = CarwingsRegion.Europe,
-      Future<String> blowfishEncryptCallback(String key, String password)}) async {
+      Future<String> blowfishEncryptCallback(
+          String key, String password)}) async {
     this.username = username;
     this.password = password;
     this.blowfishEncryptCallback = blowfishEncryptCallback;
@@ -92,10 +95,11 @@ class CarwingsSession {
     loggedIn = false;
     customSessionID = '';
 
-    var response = await request(
-        "InitialApp.php", {"RegionCode": _getRegionName(region), "lg": "en-US"});
+    var response = await request("InitialApp.php",
+        {"RegionCode": _getRegionName(region), "lg": "en-US"});
 
-    var encodedPassword = await blowfishEncryptCallback(response['baseprm'], password);
+    var encodedPassword =
+        await blowfishEncryptCallback(response['baseprm'], password);
 
     response = await request("UserLoginRequest.php", {
       "RegionCode": _getRegionName(region),
