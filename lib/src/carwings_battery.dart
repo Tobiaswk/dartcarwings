@@ -11,6 +11,7 @@ class CarwingsBattery {
   bool isQuickCharging = false;
   bool isConnectedToQuickCharging = false;
   String batteryPercentage;
+  String battery12thBar; // Leaf using 12th bar system; present as 12ths; 5/12 etc.
   String cruisingRangeAcOffKm;
   String cruisingRangeAcOffMiles;
   String cruisingRangeAcOnKm;
@@ -86,10 +87,11 @@ class CarwingsBattery {
       double SOC = double.parse(bs['SOC']['Value']);
       this.batteryPercentage =
           new NumberFormat('0.0').format(SOC).toString() + '%';
-    } else if (batteryLevelCapacity >= 0.0 && batteryLevelCapacity <= 12.0) {
+    }
+    if (batteryLevelCapacity >= 0.0 && batteryLevelCapacity <= 12.0) {
       // Leaf using 12th bar system; present as 12ths; 5/12 etc.
       // batteryLevelCapacity can be lower than 12 because of degradation
-      this.batteryPercentage =
+      this.battery12thBar =
       "${new NumberFormat('0').format(batteryLevel)} / ${new NumberFormat(
           '0').format(batteryLevelCapacity)}";
     }
