@@ -25,8 +25,6 @@ class CarwingsSession {
   var username;
   var password;
   CarwingsRegion region;
-  var vin = '';
-  var customSessionID = '';
   bool loggedIn = false;
   var gdcUserId;
   var timeZoneProvided;
@@ -36,6 +34,7 @@ class CarwingsSession {
   var blowfishEncryptCallback;
 
   CarwingsVehicle vehicle;
+  List<CarwingsVehicle> vehicles;
 
   CarwingsSession({this.debug = false, this.timeZoneOverride});
 
@@ -63,8 +62,8 @@ class CarwingsSession {
 
   Future<dynamic> request(String endpoint, Map params) async {
     params['initial_app_strings'] = initialAppStrings;
-    if (customSessionID != null) {
-      params['custom_sessionid'] = customSessionID;
+    if (vehicle != null && vehicle.customSessionID != null) {
+      params['custom_sessionid'] = vehicle.customSessionID;
     } else {
       params['custom_sessionid'] = '';
     }
@@ -93,7 +92,6 @@ class CarwingsSession {
     this.blowfishEncryptCallback = blowfishEncryptCallback;
 
     loggedIn = false;
-    customSessionID = '';
 
     var response = await request("InitialApp.php",
         {"RegionCode": _getRegionName(region), "lg": "en-US"});
@@ -111,22 +109,38 @@ class CarwingsSession {
       throw 'Login error';
     }
 
-    if (response["VehicleInfoList"] != null) {
-      customSessionID =
-          response["VehicleInfoList"]["vehicleInfo"][0]["custom_sessionid"];
-    } else {
-      customSessionID = response["vehicleInfo"][0]["custom_sessionid"];
-    }
-
     language = response['CustomerInfo']["Language"];
     gdcUserId = response["vehicle"]["profile"]["gdcUserId"];
     dcmId = response["vehicle"]["profile"]["dcmId"];
-    vin = response["vehicle"]["profile"]["vin"];
     timeZoneProvided = response["CustomerInfo"]["Timezone"];
 
     loggedIn = true;
 
-    vehicle = new CarwingsVehicle(this, response);
+    vehicles = new List<CarwingsVehicle>();
+    // For some odd reason VehicleInfoList is not present on 1th gen Leafs
+    // It is only there for 2nd gen Leafs
+    if(response["VehicleInfoList"] != null) {
+      for (Map vehicleInfo in response["VehicleInfoList"]["vehicleInfo"]) {
+        vehicles.add(new CarwingsVehicle(
+            this,
+            vehicleInfo['custom_sessionid'],
+            vehicleInfo['vin'],
+            vehicleInfo['nickname'],
+            response["CustomerInfo"]["VehicleInfo"]["UserVehicleBoundTime"],
+            response['CustomerInfo']['VehicleInfo']['CarName']));
+      }
+    } else {
+      for (Map vehicleInfo in response["vehicleInfo"]) {
+        vehicles.add(new CarwingsVehicle(
+            this,
+            vehicleInfo['custom_sessionid'],
+            vehicleInfo['vin'],
+            vehicleInfo['nickname'],
+            response["CustomerInfo"]["VehicleInfo"]["UserVehicleBoundTime"],
+            response['CustomerInfo']['VehicleInfo']['CarName']));
+      }
+    }
+    vehicle = vehicles.first;
 
     return vehicle;
   }

@@ -13,26 +13,14 @@ class CarwingsVehicle {
   var _targetMonthFormatter = new DateFormat('yyyyMM');
   var _targetDateFormatter = new DateFormat('yyyy-MM-dd');
 
-  CarwingsSession _session;
+  CarwingsSession session;
+  var customSessionID;
   var vin;
   var nickname;
   var boundTime;
   var model;
 
-  CarwingsVehicle(CarwingsSession session, Map params) {
-    this._session = session;
-    this.vin = params["vehicle"]["profile"]["vin"];
-    // For some odd reason VehicleInfoList is not present on 1th gen Leafs
-    // It is only there for 2nd gen Leafs
-    if (params["VehicleInfoList"] != null) {
-      this.nickname = params["VehicleInfoList"]["vehicleInfo"][0]["nickname"];
-    } else {
-      this.nickname = params["vehicleInfo"][0]['nickname'];
-    }
-    this.boundTime =
-        params["CustomerInfo"]["VehicleInfo"]["UserVehicleBoundTime"];
-    this.model = params['CustomerInfo']['VehicleInfo']['CarName'];
-  }
+  CarwingsVehicle(this.session, this.customSessionID, this.vin, this.nickname, this.boundTime, this.model);
 
   DateTime getLastDriven() {
     return DateTime.parse(this.boundTime);
@@ -40,13 +28,13 @@ class CarwingsVehicle {
 
   Future<CarwingsBattery> requestBatteryStatus() async {
     var response =
-        await _session.requestWithRetry("BatteryStatusCheckRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("BatteryStatusCheckRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
-      "UserId": _session.gdcUserId
+      "tz": session.timeZone,
+      "UserId": session.gdcUserId
     });
 
     CarwingsBattery battery;
@@ -62,12 +50,12 @@ class CarwingsVehicle {
 
   Future<CarwingsBattery> _getBatteryStatus(String resultKey) async {
     var response =
-        await _session.requestWithRetry("BatteryStatusCheckResultRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("BatteryStatusCheckResultRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
+      "tz": session.timeZone,
       "resultKey": resultKey
     });
     if (responseFlagHandler(response)) {
@@ -77,12 +65,12 @@ class CarwingsVehicle {
   }
 
   Future<Null> requestClimateControlOn() async {
-    var response = await _session.requestWithRetry("ACRemoteRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+    var response = await session.requestWithRetry("ACRemoteRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone
+      "tz": session.timeZone
     });
 
     while (responseValidHandler(response)) {
@@ -94,13 +82,13 @@ class CarwingsVehicle {
   }
 
   Future<bool> _getClimateControlOnStatus(String resultKey) async {
-    var response = await _session.requestWithRetry("ACRemoteResult.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+    var response = await session.requestWithRetry("ACRemoteResult.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
-      "UserId": _session.gdcUserId,
+      "tz": session.timeZone,
+      "UserId": session.gdcUserId,
       "resultKey": resultKey
     });
     if (responseFlagHandler(response)) {
@@ -110,12 +98,12 @@ class CarwingsVehicle {
   }
 
   Future<Null> requestClimateControlOff() async {
-    var response = await _session.requestWithRetry("ACRemoteOffRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+    var response = await session.requestWithRetry("ACRemoteOffRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone
+      "tz": session.timeZone
     });
 
     while (responseValidHandler(response)) {
@@ -127,13 +115,13 @@ class CarwingsVehicle {
   }
 
   Future<bool> _getClimateControlOffStatus(String resultKey) async {
-    var response = await _session.requestWithRetry("ACRemoteOffResult.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+    var response = await session.requestWithRetry("ACRemoteOffResult.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
-      "UserId": _session.gdcUserId,
+      "tz": session.timeZone,
+      "UserId": session.gdcUserId,
       "resultKey": resultKey
     });
     if (responseFlagHandler(response)) {
@@ -146,12 +134,12 @@ class CarwingsVehicle {
   // regardless of tz
   Future<Null> requestClimateControlSchedule(DateTime startTime) async {
     var response =
-        await _session.requestWithRetry("ACRemoteUpdateRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("ACRemoteUpdateRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
+      "tz": session.timeZone,
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
     });
     if (responseValidHandler(response)) {
@@ -161,12 +149,12 @@ class CarwingsVehicle {
 
   Future<Null> requestClimateControlScheduleCancel() async {
     var response =
-        await _session.requestWithRetry("ACRemoteCancelRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("ACRemoteCancelRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone
+      "tz": session.timeZone
     });
     if (responseValidHandler(response)) {
       return;
@@ -177,12 +165,12 @@ class CarwingsVehicle {
   // ExecuteTime is also available is in UTC/GMT
   Future<DateTime> requestClimateControlScheduleGet() async {
     var response =
-        await _session.requestWithRetry("GetScheduledACRemoteRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("GetScheduledACRemoteRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone
+      "tz": session.timeZone
     });
     if (responseValidHandler(response)) {
       if (response['DisplayExecuteTime'] != '') {
@@ -196,12 +184,12 @@ class CarwingsVehicle {
   // regardless of tz
   Future<Null> requestChargingStart(DateTime startTime) async {
     var response =
-        await _session.requestWithRetry("BatteryRemoteChargingRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("BatteryRemoteChargingRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
+      "tz": session.timeZone,
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
     });
     if (responseValidHandler(response)) {
@@ -211,12 +199,12 @@ class CarwingsVehicle {
 
   Future<CarwingsStatsMonthly> requestStatisticsMonthly(DateTime month) async {
     var response =
-        await _session.requestWithRetry("PriceSimulatorDetailInfoRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("PriceSimulatorDetailInfoRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
+      "tz": session.timeZone,
       "TargetMonth": _targetMonthFormatter.format(month)
     });
     if (responseValidHandler(response)) {
@@ -225,13 +213,13 @@ class CarwingsVehicle {
   }
 
   Future<CarwingsStatsDaily> requestStatisticsDaily() async {
-    var response = await _session
+    var response = await session
         .requestWithRetry("DriveAnalysisBasicScreenRequestEx.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone
+      "tz": session.timeZone
     });
     if (responseValidHandler(response)) {
       return new CarwingsStatsDaily(response);
@@ -240,12 +228,12 @@ class CarwingsVehicle {
 
   Future<CarwingsHVAC> requestHVACStatus() async {
     var response =
-        await _session.requestWithRetry("RemoteACRecordsRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("RemoteACRecordsRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
+      "tz": session.timeZone,
       "TimeFrom": boundTime
     });
     if (responseValidHandler(response)) {
@@ -255,12 +243,12 @@ class CarwingsVehicle {
 
   Future<CarwingsBattery> requestBatteryStatusLatest() async {
     var response =
-        await _session.requestWithRetry("BatteryStatusRecordsRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("BatteryStatusRecordsRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
+      "tz": session.timeZone,
       "TimeFrom": boundTime
     });
     if (responseValidHandler(response)) {
@@ -269,13 +257,13 @@ class CarwingsVehicle {
   }
 
   Future<CarwingsLocation> requestLocation() async {
-    var response = await _session.requestWithRetry("MyCarFinderRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+    var response = await session.requestWithRetry("MyCarFinderRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
-      "UserId": _session.gdcUserId
+      "tz": session.timeZone,
+      "UserId": session.gdcUserId
     });
 
     while (responseValidHandler(response)) {
@@ -290,12 +278,12 @@ class CarwingsVehicle {
 
   Future<CarwingsLocation> _getLocationStatus(String resultKey) async {
     var response =
-        await _session.requestWithRetry("MyCarFinderResultRequest.php", {
-      "RegionCode": _session.getRegion(),
-      "lg": _session.language,
-      "DMCID": _session.dcmId,
+        await session.requestWithRetry("MyCarFinderResultRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DMCID": session.dcmId,
       "VIN": vin,
-      "tz": _session.timeZone,
+      "tz": session.timeZone,
       "resultKey": resultKey
     });
     if (responseFlagHandler(response)) {
