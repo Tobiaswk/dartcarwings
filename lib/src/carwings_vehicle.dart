@@ -31,7 +31,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("BatteryStatusCheckRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "UserId": session.gdcUserId
@@ -53,7 +53,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("BatteryStatusCheckResultRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "resultKey": resultKey
@@ -68,7 +68,7 @@ class CarwingsVehicle {
     var response = await session.requestWithRetry("ACRemoteRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone
     });
@@ -85,7 +85,7 @@ class CarwingsVehicle {
     var response = await session.requestWithRetry("ACRemoteResult.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "UserId": session.gdcUserId,
@@ -101,7 +101,7 @@ class CarwingsVehicle {
     var response = await session.requestWithRetry("ACRemoteOffRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone
     });
@@ -118,7 +118,7 @@ class CarwingsVehicle {
     var response = await session.requestWithRetry("ACRemoteOffResult.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "UserId": session.gdcUserId,
@@ -137,7 +137,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("ACRemoteUpdateRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
@@ -152,7 +152,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("ACRemoteCancelRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone
     });
@@ -168,7 +168,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("GetScheduledACRemoteRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone
     });
@@ -187,7 +187,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("BatteryRemoteChargingRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "ExecuteTime": _executeTimeFormatter.format(startTime.toUtc())
@@ -202,7 +202,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("PriceSimulatorDetailInfoRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "TargetMonth": _targetMonthFormatter.format(month)
@@ -217,7 +217,7 @@ class CarwingsVehicle {
         .requestWithRetry("DriveAnalysisBasicScreenRequestEx.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone
     });
@@ -231,7 +231,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("RemoteACRecordsRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "TimeFrom": boundTime
@@ -246,7 +246,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("BatteryStatusRecordsRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "TimeFrom": boundTime
@@ -260,7 +260,7 @@ class CarwingsVehicle {
     var response = await session.requestWithRetry("MyCarFinderRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "UserId": session.gdcUserId
@@ -281,7 +281,7 @@ class CarwingsVehicle {
         await session.requestWithRetry("MyCarFinderResultRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
-      "DMCID": session.dcmId,
+      "DCMID": session.dcmId,
       "VIN": vin,
       "tz": session.timeZone,
       "resultKey": resultKey
