@@ -8,6 +8,8 @@ import 'package:dartcarwings/src/carwings_battery.dart';
 import 'package:dartcarwings/src/carwings_session.dart';
 
 class CarwingsVehicle {
+  final int MAX_RETRIES = 10;
+
   var _executeTimeFormatter = new DateFormat('yyyy-MM-dd H:m');
   var _displayExecuteTimeFormatter = new DateFormat('dd-MM-yyyy H:m');
   var _targetMonthFormatter = new DateFormat('yyyyMM');
@@ -39,7 +41,8 @@ class CarwingsVehicle {
 
     CarwingsBattery battery;
 
-    while (responseValidHandler(response)) {
+    int retries = MAX_RETRIES;
+    while (responseValidHandler(response, retries: retries)) {
       battery = await _getBatteryStatus(response['resultKey']);
       if (battery != null) {
         return battery;
@@ -73,7 +76,8 @@ class CarwingsVehicle {
       "tz": session.timeZone
     });
 
-    while (responseValidHandler(response)) {
+    int retries = MAX_RETRIES;
+    while (responseValidHandler(response, retries: retries)) {
       if (await _getClimateControlOnStatus(response['resultKey'])) {
         return;
       }
@@ -106,7 +110,8 @@ class CarwingsVehicle {
       "tz": session.timeZone
     });
 
-    while (responseValidHandler(response)) {
+    int retries = MAX_RETRIES;
+    while (responseValidHandler(response, retries: retries)) {
       if (await _getClimateControlOffStatus(response['resultKey'])) {
         return;
       }
@@ -266,7 +271,8 @@ class CarwingsVehicle {
       "UserId": session.gdcUserId
     });
 
-    while (responseValidHandler(response)) {
+    int retries = MAX_RETRIES;
+    while (responseValidHandler(response, retries: retries)) {
       CarwingsLocation carwingsLocation =
           await _getLocationStatus(response['resultKey']);
       if (carwingsLocation != null) {
@@ -292,8 +298,8 @@ class CarwingsVehicle {
     return null;
   }
 
-  bool responseValidHandler(response) =>
-      response['status'] != 200 ? throw 'Error' : true;
+  bool responseValidHandler(response, {retries = -1}) =>
+      response['status'] != 200 || retries-- == 0 ? throw 'Error' : true;
 
   bool responseFlagHandler(response) => response['status'] != 200
       ? throw 'Error'
