@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   intl: '^0.15.7'
-  http: '^0.11.3+17'
+  http: '^0.12.0'
 
 dev_dependencies:
   test: '^1.3.0'
