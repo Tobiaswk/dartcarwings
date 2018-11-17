@@ -36,7 +36,7 @@ class CarwingsStatsTrips {
             double.parse(trip['TravelDistance']),
             double.parse(trip['PowerConsumptTotal'])/1000,
             electricCostScale);
-        carwingsTripDetail.CO2Reduction = trip['CO2Reduction'] + ' kg CO²';
+        carwingsTripDetail.CO2Reduction = trip['CO2Reduction'] + ' kg CO2';
         trips.add(carwingsTripDetail);
       }
     }
