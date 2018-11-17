@@ -1,6 +1,6 @@
 class CarwingsStatsTripDetail {
   DateTime date;
-  String number;
+  int number;
   String kWhPerMileage;
   String mileagePerKWh;
   String consumptionKWh;
