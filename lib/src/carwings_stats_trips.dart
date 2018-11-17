@@ -23,6 +23,7 @@ class CarwingsStatsTrips {
         CarwingsStatsTripDetail carwingsTripDetail = CarwingsStatsTripDetail();
         carwingsTripDetail.date =
             new DateFormat('yyyy-MM-dd').parse(stats['TargetDate']);
+        carwingsTripDetail.number = trip['TripId'];
         carwingsTripDetail.consumptionKWh = carwingsUnitCalculator
             .consumption(double.parse(trip['PowerConsumptTotal'])/1000);
         carwingsTripDetail.travelDistanceMileage = carwingsUnitCalculator
