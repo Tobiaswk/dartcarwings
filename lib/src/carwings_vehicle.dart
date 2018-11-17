@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dartcarwings/src/carwings_stats_trips.dart';
 import 'package:intl/intl.dart';
 import 'package:dartcarwings/src/carwings_stats_daily.dart';
 import 'package:dartcarwings/src/carwings_hvac.dart';
@@ -214,6 +215,21 @@ class CarwingsVehicle {
     });
     if (responseValidHandler(response)) {
       return new CarwingsStatsMonthly(response);
+    }
+  }
+
+  Future<CarwingsStatsTrips> requestStatisticsMonthlyTrips(DateTime month) async {
+    var response =
+    await session.requestWithRetry("PriceSimulatorDetailInfoRequest.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DCMID": session.dcmId,
+      "VIN": vin,
+      "tz": session.timeZone,
+      "TargetMonth": _targetMonthFormatter.format(month)
+    });
+    if (responseValidHandler(response)) {
+      return new CarwingsStatsTrips(response);
     }
   }
 
