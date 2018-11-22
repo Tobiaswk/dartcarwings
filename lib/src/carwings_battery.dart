@@ -92,8 +92,7 @@ class CarwingsBattery {
       // Leaf using 12th bar system; present as 12ths; 5/12 etc.
       // batteryLevelCapacity can be lower than 12 because of degradation
       this.battery12thBar =
-      "${new NumberFormat('0').format(batteryLevel)} / ${new NumberFormat(
-          '0').format(batteryLevelCapacity)}";
+      "${numberFormat.format(batteryLevel)} / ${numberFormat.format(batteryLevelCapacity)}";
     }
     this.cruisingRangeAcOffKm =
         numberFormat.format(double.parse(recs['CruisingRangeAcOff']) / 1000) +
