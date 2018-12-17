@@ -91,8 +91,13 @@ class CarwingsBattery {
     if (batteryLevelCapacity >= 0.0 && batteryLevelCapacity <= 12.0) {
       // Leaf using 12th bar system; present as 12ths; 5/12 etc.
       // batteryLevelCapacity can be lower than 12 because of degradation
+      // we explicitly use 12 instead of batteryLevelCapacity
       this.battery12thBar =
-      "${numberFormat.format(batteryLevel)} / ${numberFormat.format(batteryLevelCapacity)}";
+      "${numberFormat.format(batteryLevel)} / 12";
+      this.batteryPercentage = new NumberFormat('0.0')
+        .format((this.batteryLevel * 100) / 12)
+        .toString() +
+        '%';
     }
     this.cruisingRangeAcOffKm =
         numberFormat.format(double.parse(recs['CruisingRangeAcOff']) / 1000) +
