@@ -6,7 +6,7 @@ import 'package:dartcarwings/src/carwings_vehicle.dart';
 enum CarwingsRegion { USA, Europe, Canada, Australia, Japan }
 
 class CarwingsSession {
-  final String baseUrl = "https://gdcportalgw.its-mo.com/api_v180117_NE/gdc/";
+  final String baseUrl = "https://gdcportalgw.its-mo.com/api_v181217_NE/gdc/";
 
   // Result of the call to InitialApp.php, which appears to
   // always be the same.  It'll probably break at some point but
