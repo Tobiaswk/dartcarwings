@@ -1,9 +1,0 @@
-image: cirrusci/flutter
-
-stages:
-    - build
-    
-flutterBuild:
-  stage: build
-  script:
-    - flutter build apk
