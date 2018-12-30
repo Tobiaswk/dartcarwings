@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dartcarwings/src/carwings_cabin_temperature.dart';
 import 'package:dartcarwings/src/carwings_stats_trips.dart';
 import 'package:intl/intl.dart';
 import 'package:dartcarwings/src/carwings_stats_daily.dart';
@@ -43,7 +44,7 @@ class CarwingsVehicle {
     CarwingsBattery battery;
 
     int retries = MAX_RETRIES;
-    while (responseValidHandler(response, retries: retries)) {
+    while (responseValidHandler(response, retries: retries--)) {
       battery = await _getBatteryStatus(response['resultKey']);
       if (battery != null) {
         return battery;
@@ -78,7 +79,7 @@ class CarwingsVehicle {
     });
 
     int retries = MAX_RETRIES;
-    while (responseValidHandler(response, retries: retries)) {
+    while (responseValidHandler(response, retries: retries--)) {
       if (await _getClimateControlOnStatus(response['resultKey'])) {
         return;
       }
@@ -112,7 +113,7 @@ class CarwingsVehicle {
     });
 
     int retries = MAX_RETRIES;
-    while (responseValidHandler(response, retries: retries)) {
+    while (responseValidHandler(response, retries: retries--)) {
       if (await _getClimateControlOffStatus(response['resultKey'])) {
         return;
       }
@@ -262,6 +263,58 @@ class CarwingsVehicle {
     }
   }
 
+  Future<CarwingsCabinTemperature> requestCabinTemperatureLatest() async {
+    var response =
+    await session.requestWithRetry("CheckCabinTemp.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DCMID": session.dcmId,
+      "VIN": vin,
+      "tz": session.timeZone,
+      "TimeFrom": boundTime
+    });
+    if (responseValidHandler(response)) {
+      return new CarwingsCabinTemperature(response);
+    }
+  }
+
+  Future<CarwingsCabinTemperature> requestCabinTemperature() async {
+    var response = await session.requestWithRetry("GetInteriorTemperatureRequestForNsp.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DCMID": session.dcmId,
+      "VIN": vin,
+      "tz": session.timeZone
+    });
+
+    CarwingsCabinTemperature carwingsCabinTemperature;
+
+    int retries = MAX_RETRIES;
+    while (responseValidHandler(response, retries: retries--)) {
+      carwingsCabinTemperature = await _getCabinTemperature(response['resultKey']);
+      if (carwingsCabinTemperature != null) {
+        return carwingsCabinTemperature;
+      }
+      await waitForResponse();
+    }
+  }
+
+  Future<CarwingsCabinTemperature> _getCabinTemperature(String resultKey) async {
+    var response = await session.requestWithRetry("GetInteriorTemperatureResultForNsp.php", {
+      "RegionCode": session.getRegion(),
+      "lg": session.language,
+      "DCMID": session.dcmId,
+      "VIN": vin,
+      "tz": session.timeZone,
+      "UserId": session.gdcUserId,
+      "resultKey": resultKey
+    });
+    if (responseFlagHandler(response)) {
+      return new CarwingsCabinTemperature(response);;
+    }
+    return null;
+  }
+
   Future<CarwingsBattery> requestBatteryStatusLatest() async {
     var response =
         await session.requestWithRetry("BatteryStatusRecordsRequest.php", {
@@ -288,7 +341,7 @@ class CarwingsVehicle {
     });
 
     int retries = MAX_RETRIES;
-    while (responseValidHandler(response, retries: retries)) {
+    while (responseValidHandler(response, retries: retries--)) {
       CarwingsLocation carwingsLocation =
           await _getLocationStatus(response['resultKey']);
       if (carwingsLocation != null) {
@@ -315,7 +368,7 @@ class CarwingsVehicle {
   }
 
   bool responseValidHandler(response, {retries = -1}) =>
-      response['status'] != 200 || retries-- == 0 ? throw 'Error' : true;
+      response['status'] != 200 || retries == 0 ? throw 'Error' : true;
 
   bool responseFlagHandler(response) => response['status'] != 200
       ? throw 'Error'
