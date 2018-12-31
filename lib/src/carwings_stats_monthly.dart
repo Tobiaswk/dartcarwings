@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class CarwingsStatsMonthly {
-  DateTime month;
+  DateTime dateTime;
   String electricCostScale;
   String mileageUnit;
   String totalNumberOfTrips;
@@ -21,7 +21,7 @@ class CarwingsStatsMonthly {
         params["PriceSimulatorDetailInfoResponsePersonalData"]
             ['ElectricCostScale'];
 
-    this.month = new DateFormat('MMM/y').parse(r['DisplayMonth']);
+    this.dateTime = new DateFormat('MMM/y').parse(r['DisplayMonth']);
     this.totalNumberOfTrips = t['TotalNumberOfTrips'];
     this.totalConsumptionKWh =
         numberFormat.format(double.parse(t['TotalPowerConsumptTotal'])) +

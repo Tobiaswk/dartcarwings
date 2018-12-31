@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 class CarwingsBattery {
   NumberFormat numberFormat = new NumberFormat('0');
 
-  DateTime timeStamp;
+  DateTime dateTime;
   double batteryLevelCapacity;
   double batteryLevel;
   bool isConnected = false;
@@ -24,7 +24,7 @@ class CarwingsBattery {
 
   CarwingsBattery(Map params) {
     //this.timeStamp = new DateFormat('yyyy-MM-dd H:m:s').parse(params['timeStamp']);
-    this.timeStamp = new DateTime.now(); // Always now
+    this.dateTime = new DateTime.now(); // Always now
     this.batteryLevelCapacity = double.parse(params['batteryCapacity']);
     this.batteryLevel = double.parse(params['batteryDegradation']);
     this.isConnected = params['pluginState'] != 'NOT_CONNECTED';
@@ -62,14 +62,14 @@ class CarwingsBattery {
     // These are in UTC
     // Until better timezone support has been added to Dart this will do
     try {
-      this.timeStamp =
+      this.dateTime =
           new DateFormat('d-M-yyyy H:m').parse(recs['OperationDateAndTime']);
     } catch (e) {
       try {
-        this.timeStamp = new DateFormat('dd-MMM-yyyy H:m')
+        this.dateTime = new DateFormat('dd-MMM-yyyy H:m')
             .parse(recs['OperationDateAndTime']);
       } catch (e) {
-        this.timeStamp = new DateTime.now(); // Just use now
+        this.dateTime = new DateTime.now(); // Just use now
       }
     }
     this.batteryLevelCapacity = double.parse(bs['BatteryCapacity']);

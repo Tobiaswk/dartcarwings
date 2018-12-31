@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class CarwingsStatsDaily {
-  DateTime date;
+  DateTime dateTime;
   String mileagePerKWh;
   String KWhPerMileage;
   String mileageLevel;
@@ -19,7 +19,7 @@ class CarwingsStatsDaily {
 
     NumberFormat numberFormat = new NumberFormat('0.00');
 
-    this.date = new DateFormat('yyyy-MM-dd').parse(summary['TargetDate']);
+    this.dateTime = new DateFormat('yyyy-MM-dd').parse(summary['TargetDate']);
     this.electricCostScale =
         params["DriveAnalysisBasicScreenResponsePersonalData"]
             ["ElectricCostScale"];
