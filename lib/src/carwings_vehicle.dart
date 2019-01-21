@@ -340,9 +340,11 @@ class CarwingsVehicle {
       "UserId": session.gdcUserId
     });
 
+    CarwingsLocation carwingsLocation;
+
     int retries = MAX_RETRIES;
     while (responseValidHandler(response, retries: retries--)) {
-      CarwingsLocation carwingsLocation =
+      carwingsLocation =
           await _getLocationStatus(response['resultKey']);
       if (carwingsLocation != null) {
         return carwingsLocation;
