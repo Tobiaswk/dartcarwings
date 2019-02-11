@@ -274,7 +274,7 @@ class CarwingsVehicle {
       "TimeFrom": boundTime
     });
     if (responseValidHandler(response)) {
-      return new CarwingsCabinTemperature(response);
+      return new CarwingsCabinTemperature.latest(response);
     }
   }
 
