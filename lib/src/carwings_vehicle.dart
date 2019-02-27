@@ -376,7 +376,7 @@ class CarwingsVehicle {
       ? throw 'Error'
       : response['responseFlag'] == '1';
 
-  Future<Null> waitForResponse({waitSeconds = 10}) {
+  Future<Null> waitForResponse({waitSeconds = 5}) {
     return new Future.delayed(new Duration(seconds: waitSeconds));
   }
 }
