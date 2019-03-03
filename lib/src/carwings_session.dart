@@ -30,7 +30,7 @@ class CarwingsSession {
   var timeZoneProvided;
   var language;
   var dcmId;
-  var modelYear;
+  int modelYear = 0;
 
   var blowfishEncryptCallback;
 
@@ -115,7 +115,10 @@ class CarwingsSession {
     dcmId = response["vehicle"]["profile"]["dcmId"];
     timeZoneProvided = response["CustomerInfo"]["Timezone"];
     // With more than one vehicle this value makes little sense
-    modelYear = response["vehicle"]["profile"]["modelyear"];
+    try {
+      modelYear = int.parse(response["vehicle"]["profile"]["modelyear"]);
+    } catch (e) {
+    }
 
     loggedIn = true;
 
