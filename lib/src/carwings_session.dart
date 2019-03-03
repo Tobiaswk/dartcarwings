@@ -39,12 +39,6 @@ class CarwingsSession {
 
   CarwingsSession({this.debug = false, this.timeZoneOverride});
 
-  String get timeZone => timeZoneOverride != null && timeZoneOverride.isNotEmpty
-      ? timeZoneOverride
-      : timeZoneProvided;
-
-  bool get isFirstGeneration => modelYear < 18;
-
   Future<dynamic> requestWithRetry(String endpoint, Map params) async {
     dynamic response = await request(endpoint, params);
 
@@ -119,15 +113,14 @@ class CarwingsSession {
     // With more than one vehicle this value makes little sense
     try {
       modelYear = int.parse(response["vehicle"]["profile"]["modelyear"]);
-    } catch (e) {
-    }
+    } catch (e) {}
 
     loggedIn = true;
 
     vehicles = new List<CarwingsVehicle>();
     // For some odd reason VehicleInfoList is not present on 1th gen Leafs
     // It is only there for 2nd gen Leafs
-    if(response["VehicleInfoList"] != null) {
+    if (response["VehicleInfoList"] != null) {
       for (Map vehicleInfo in response["VehicleInfoList"]["vehicleInfo"]) {
         vehicles.add(new CarwingsVehicle(
             this,
@@ -152,6 +145,12 @@ class CarwingsSession {
 
     return vehicle;
   }
+
+  String get timeZone => timeZoneOverride != null && timeZoneOverride.isNotEmpty
+      ? timeZoneOverride
+      : timeZoneProvided;
+
+  bool get isFirstGeneration => modelYear < 18;
 
   setTimeZoneOverride(String tz) {
     timeZoneOverride = tz;
