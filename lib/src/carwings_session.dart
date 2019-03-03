@@ -43,6 +43,8 @@ class CarwingsSession {
       ? timeZoneOverride
       : timeZoneProvided;
 
+  bool get isFirstGeneration => modelYear < 18;
+
   Future<dynamic> requestWithRetry(String endpoint, Map params) async {
     dynamic response = await request(endpoint, params);
 
