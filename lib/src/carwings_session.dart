@@ -86,6 +86,7 @@ class CarwingsSession {
           String key, String password)}) async {
     this.username = username;
     this.password = password;
+    this.region = region;
     this.blowfishEncryptCallback = blowfishEncryptCallback;
 
     loggedIn = false;
