@@ -10,7 +10,7 @@ import 'package:dartcarwings/src/carwings_battery.dart';
 import 'package:dartcarwings/src/carwings_session.dart';
 
 class CarwingsVehicle {
-  final int MAX_RETRIES = 8;
+  final int MAX_RETRIES = 15;
 
   var _executeTimeFormatter = new DateFormat('yyyy-MM-dd H:m');
   var _displayExecuteTimeFormatter = new DateFormat('dd-MM-yyyy H:m');
