@@ -32,7 +32,7 @@ class CarwingsVehicle {
 
   Future<CarwingsBattery> requestBatteryStatus() async {
     var response =
-        await session.requestWithRetry("BatteryStatusCheckRequest.php", {
+        await session.requestWithRetry("BatteryStatusCheckForSPAppsRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
       "DCMID": session.dcmId,
@@ -55,7 +55,7 @@ class CarwingsVehicle {
 
   Future<CarwingsBattery> _getBatteryStatus(String resultKey) async {
     var response =
-        await session.requestWithRetry("BatteryStatusCheckResultRequest.php", {
+        await session.requestWithRetry("BatteryStatusCheckForSPAppsResultRequest.php", {
       "RegionCode": session.getRegion(),
       "lg": session.language,
       "DCMID": session.dcmId,
