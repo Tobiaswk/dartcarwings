@@ -25,33 +25,33 @@ class CarwingsBattery {
   CarwingsBattery(Map params) {
     //this.timeStamp = new DateFormat('yyyy-MM-dd H:m:s').parse(params['timeStamp']);
     this.dateTime = new DateTime.now(); // Always now
-    this.batteryLevelCapacity = double.parse(params['battery_capacity']);
-    this.batteryLevel = double.parse(params['battery_degradation']);
-    this.isConnected = params['plugin_state'] != 'NOT_CONNECTED';
+    this.batteryLevelCapacity = double.parse(params['batteryCapacity']);
+    this.batteryLevel = double.parse(params['batteryDegradation']);
+    this.isConnected = params['pluginState'] != 'NOT_CONNECTED';
     this.isCharging = params['charging'] == 'YES';
-    this.isQuickCharging = params['charge_mode'] == 'RAPIDLY_CHARGING';
-    this.isConnectedToQuickCharging = params['plugin_state'] == 'QC_CONNECTED';
+    this.isQuickCharging = params['chargeMode'] == 'RAPIDLY_CHARGING';
+    this.isConnectedToQuickCharging = params['pluginState'] == 'QC_CONNECTED';
     this.batteryPercentage =
         ((this.batteryLevel * 100) / this.batteryLevelCapacity).toString() +
             '%';
     this.cruisingRangeAcOffKm =
-        numberFormat.format(double.parse(params['cruising_range_ac_off']) / 1000) +
+        numberFormat.format(double.parse(params['cruisingRangeAcOff']) / 1000) +
             ' km';
     this.cruisingRangeAcOffMiles = numberFormat
-        .format(double.parse(params['cruising_range_ac_off']) * 0.0006213712) +
+        .format(double.parse(params['cruisingRangeAcOff']) * 0.0006213712) +
         ' mi';
     this.cruisingRangeAcOnKm =
-        numberFormat.format(double.parse(params['cruising_range_ac_on']) / 1000) +
+        numberFormat.format(double.parse(params['cruisingRangeAcOn']) / 1000) +
             ' km';
     this.cruisingRangeAcOnMiles = numberFormat
-        .format(double.parse(params['cruising_range_ac_on']) * 0.0006213712) +
+        .format(double.parse(params['cruisingRangeAcOn']) * 0.0006213712) +
         ' mi';
     this.timeToFullTrickle =
-    new Duration(hours: int.parse(params['time_required_to_full_hours']), minutes: int.parse(params['time_required_to_full_minutes']));
+    new Duration(minutes: _timeRemaining(params['TimeRequiredToFull']));
     this.timeToFullL2 =
-    new Duration(hours: int.parse(params['time_required_to_full_200_hours']), minutes: int.parse(params['time_required_to_full_200_minutes']));
+    new Duration(minutes: _timeRemaining(params['TimeRequiredToFull200']));
     this.timeToFullL2_6kw = new Duration(
-        hours: int.parse(params['time_required_to_full_200_6kw_hours']), minutes: int.parse(params['time_required_to_full_200_6kw_minutes']));
+        minutes: _timeRemaining(params['TimeRequiredToFull200_6kW']));
   }
 
   CarwingsBattery.batteryLatest(Map params) {
