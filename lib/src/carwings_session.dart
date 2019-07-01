@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
-import 'package:http/http.dart' as carwingsHttp;
+import 'package:http/http.dart' as http;
 import 'package:dartcarwings/src/carwings_vehicle.dart';
 
 enum CarwingsRegion { USA, Europe, Canada, Australia, Japan }
@@ -68,8 +68,8 @@ class CarwingsSession {
     _print('Invoking Carwings API: $endpoint');
     _print('Params: $params');
 
-    carwingsHttp.Response response =
-        await carwingsHttp.post("${baseUrl}${endpoint}", body: params);
+    http.Response response =
+        await http.post("${baseUrl}${endpoint}", body: params);
 
     dynamic jsonData = json.decode(response.body);
 
