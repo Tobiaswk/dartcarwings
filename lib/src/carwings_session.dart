@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as carwingsHttp;
 import 'dart:convert';
 import 'package:dartcarwings/src/carwings_vehicle.dart';
 
@@ -45,7 +45,7 @@ class CarwingsSession {
     var status = response['status'];
 
     if (status != null && status >= 400) {
-      _print('carwings error; logging in and trying request again: $response');
+      _print('Carwings API; logging in and trying request again: $response');
 
       await login(
           username: username,
@@ -65,15 +65,15 @@ class CarwingsSession {
       params['custom_sessionid'] = '';
     }
 
-    _print('invoking carwings API: $endpoint');
-    _print('params: $params');
+    _print('Invoking Carwings API: $endpoint');
+    _print('Params: $params');
 
-    http.Response response =
-        await http.post("${baseUrl}${endpoint}", body: params);
+    carwingsHttp.Response response =
+        await carwingsHttp.post("${baseUrl}${endpoint}", body: params);
 
     dynamic jsonData = json.decode(response.body);
 
-    _print('result: $jsonData');
+    _print('Result: $jsonData');
 
     return jsonData;
   }
