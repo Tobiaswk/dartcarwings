@@ -1,5 +1,3 @@
-import 'package:intl/intl.dart';
-
 class CarwingsCabinTemperature {
   DateTime timeStamp;
   var temperature;

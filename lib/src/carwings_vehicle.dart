@@ -1,13 +1,13 @@
-import 'dart:async';
 import 'package:dartcarwings/src/carwings_cabin_temperature.dart';
 import 'package:dartcarwings/src/carwings_stats_trips.dart';
-import 'package:intl/intl.dart';
 import 'package:dartcarwings/src/carwings_stats_daily.dart';
 import 'package:dartcarwings/src/carwings_hvac.dart';
 import 'package:dartcarwings/src/carwings_location.dart';
 import 'package:dartcarwings/src/carwings_stats_monthly.dart';
 import 'package:dartcarwings/src/carwings_battery.dart';
 import 'package:dartcarwings/src/carwings_session.dart';
+import 'dart:async';
+import 'package:intl/intl.dart';
 
 class CarwingsVehicle {
   final int MAX_RETRIES = 15;
@@ -15,7 +15,6 @@ class CarwingsVehicle {
   var _executeTimeFormatter = new DateFormat('yyyy-MM-dd H:m');
   var _displayExecuteTimeFormatter = new DateFormat('dd-MM-yyyy H:m');
   var _targetMonthFormatter = new DateFormat('yyyyMM');
-  var _targetDateFormatter = new DateFormat('yyyy-MM-dd');
 
   CarwingsSession session;
   var customSessionID;
@@ -310,7 +309,7 @@ class CarwingsVehicle {
       "resultKey": resultKey
     });
     if (responseFlagHandler(response)) {
-      return new CarwingsCabinTemperature(response);;
+      return new CarwingsCabinTemperature(response);
     }
     return null;
   }

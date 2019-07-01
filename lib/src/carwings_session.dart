@@ -1,6 +1,6 @@
+import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as carwingsHttp;
-import 'dart:convert';
 import 'package:dartcarwings/src/carwings_vehicle.dart';
 
 enum CarwingsRegion { USA, Europe, Canada, Australia, Japan }
