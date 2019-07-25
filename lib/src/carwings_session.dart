@@ -6,7 +6,7 @@ import 'package:dartcarwings/src/carwings_vehicle.dart';
 enum CarwingsRegion { USA, Europe, Canada, Australia, Japan }
 
 class CarwingsSession {
-  final String baseUrl = "https://gdcportalgw.its-mo.com/api_v190228_NE/gdc/";
+  final String baseUrl = "https://gdcportalgw.its-mo.com/api_v190426_NE/gdc/";
 
   // Result of the call to InitialApp.php, which appears to
   // always be the same.  It'll probably break at some point but
@@ -14,7 +14,7 @@ class CarwingsSession {
   final String blowfishKey = "uyI5Dj9g8VCOFDnBRUbr3g";
 
   // Extracted from the NissanConnect EV app
-  final String initialAppStrings = "geORNtsZe5I4lRGjG9GZiA";
+  final String initialAppStrings = "9s5rfKVuMrT03RtzajWNcA";
 
   bool debug;
   List<String> debugLog = new List<String>();
@@ -58,7 +58,7 @@ class CarwingsSession {
   }
 
   Future<dynamic> request(String endpoint, Map params) async {
-    params['initial_app_strings'] = initialAppStrings;
+    params['initial_app_str'] = initialAppStrings;
     if (vehicle != null && vehicle.customSessionID != null) {
       params['custom_sessionid'] = vehicle.customSessionID;
     } else {
@@ -91,7 +91,7 @@ class CarwingsSession {
 
     loggedIn = false;
 
-    var response = await request("InitialApp.php",
+    var response = await request("InitialApp_v2.php",
         {"RegionCode": _getRegionName(region), "lg": "en-US"});
 
     var encodedPassword =
