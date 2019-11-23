@@ -76,7 +76,11 @@ class CarwingsBattery {
           try {
             this.dateTime = new DateFormat('MMM DD, yyyy HH:mm a').parse(recs['OperationDateAndTime']);
           } catch (e) {
-            this.dateTime = new DateTime.now(); // Just use now
+            try {
+              this.dateTime = new DateFormat('d-MMM-yyyy HH:mm').parse(recs['OperationDateAndTime']);
+            } catch (e) {
+              this.dateTime = new DateTime.now(); // Just use now
+            }
           }
         }
       }
