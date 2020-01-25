@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class CarwingsBattery {
-  NumberFormat numberFormat = new NumberFormat('0');
+  NumberFormat numberFormat = NumberFormat('0');
 
   DateTime dateTime;
   double batteryLevelCapacity;
@@ -11,7 +11,8 @@ class CarwingsBattery {
   bool isQuickCharging = false;
   bool isConnectedToQuickCharging = false;
   String batteryPercentage;
-  String battery12thBar; // Leaf using 12th bar system; present as 12ths; 5/12 etc.
+  String
+      battery12thBar; // Leaf using 12th bar system; present as 12ths; 5/12 etc.
   String cruisingRangeAcOffKm;
   String cruisingRangeAcOffMiles;
   String cruisingRangeAcOnKm;
@@ -24,7 +25,7 @@ class CarwingsBattery {
 
   CarwingsBattery(Map params) {
     //this.timeStamp = new DateFormat('yyyy-MM-dd H:m:s').parse(params['timeStamp']);
-    this.dateTime = new DateTime.now(); // Always now
+    this.dateTime = DateTime.now(); // Always now
     this.batteryLevelCapacity = double.parse(params['batteryCapacity']);
     this.batteryLevel = double.parse(params['batteryDegradation']);
     this.isConnected = params['pluginState'] != 'NOT_CONNECTED';
@@ -38,24 +39,24 @@ class CarwingsBattery {
         numberFormat.format(double.parse(params['cruisingRangeAcOff']) / 1000) +
             ' km';
     this.cruisingRangeAcOffMiles = numberFormat
-        .format(double.parse(params['cruisingRangeAcOff']) * 0.0006213712) +
+            .format(double.parse(params['cruisingRangeAcOff']) * 0.0006213712) +
         ' mi';
     this.cruisingRangeAcOnKm =
         numberFormat.format(double.parse(params['cruisingRangeAcOn']) / 1000) +
             ' km';
     this.cruisingRangeAcOnMiles = numberFormat
-        .format(double.parse(params['cruisingRangeAcOn']) * 0.0006213712) +
+            .format(double.parse(params['cruisingRangeAcOn']) * 0.0006213712) +
         ' mi';
     this.timeToFullTrickle =
-    new Duration(minutes: _timeRemaining(params['TimeRequiredToFull']));
+        Duration(minutes: _timeRemaining(params['TimeRequiredToFull']));
     this.timeToFullL2 =
-    new Duration(minutes: _timeRemaining(params['TimeRequiredToFull200']));
-    this.timeToFullL2_6kw = new Duration(
-        minutes: _timeRemaining(params['TimeRequiredToFull200_6kW']));
+        Duration(minutes: _timeRemaining(params['TimeRequiredToFull200']));
+    this.timeToFullL2_6kw =
+        Duration(minutes: _timeRemaining(params['TimeRequiredToFull200_6kW']));
   }
 
   CarwingsBattery.batteryLatest(Map params) {
-    var recs = params["BatteryStatusRecords"];
+    var recs = params['BatteryStatusRecords'];
     var bs = recs['BatteryStatus'];
 
     // TargetDate or NotificationDateAndTime needs to be used in the future
@@ -63,23 +64,25 @@ class CarwingsBattery {
     // Until better timezone support has been added to Dart this will do
     try {
       this.dateTime =
-          new DateFormat('d-M-yyyy H:m').parse(recs['OperationDateAndTime']);
+          DateFormat('d-M-yyyy H:m').parse(recs['OperationDateAndTime']);
     } catch (e) {
       try {
-        this.dateTime = new DateFormat('dd-MMM-yyyy H:m')
-            .parse(recs['OperationDateAndTime']);
+        this.dateTime =
+            DateFormat('dd-MMM-yyyy H:m').parse(recs['OperationDateAndTime']);
       } catch (e) {
         try {
-          this.dateTime = new DateFormat('DD.MMM yyyy HH:mm')
+          this.dateTime = DateFormat('DD.MMM yyyy HH:mm')
               .parse(recs['OperationDateAndTime']);
         } catch (e) {
           try {
-            this.dateTime = new DateFormat('MMM DD, yyyy HH:mm a').parse(recs['OperationDateAndTime']);
+            this.dateTime = DateFormat('MMM DD, yyyy HH:mm a')
+                .parse(recs['OperationDateAndTime']);
           } catch (e) {
             try {
-              this.dateTime = new DateFormat('d-MMM-yyyy HH:mm').parse(recs['OperationDateAndTime']);
+              this.dateTime = DateFormat('d-MMM-yyyy HH:mm')
+                  .parse(recs['OperationDateAndTime']);
             } catch (e) {
-              this.dateTime = new DateTime.now(); // Just use now
+              this.dateTime = DateTime.now(); // Just use now
             }
           }
         }
@@ -91,63 +94,58 @@ class CarwingsBattery {
     this.isCharging = bs['BatteryChargingStatus'] != 'NOT_CHARGING';
     this.isQuickCharging = bs['BatteryChargingStatus'] == 'RAPIDLY_CHARGING';
     this.isConnectedToQuickCharging = recs['PluginState'] == 'QC_CONNECTED';
-    this.batteryPercentage = new NumberFormat('0.0')
-        .format((this.batteryLevel * 100) / this.batteryLevelCapacity)
-        .toString() +
+    this.batteryPercentage = NumberFormat('0.0')
+            .format((this.batteryLevel * 100) / this.batteryLevelCapacity)
+            .toString() +
         '%';
     // If SOC is available; use it
     if (bs['SOC'] != null && bs['SOC']['Value'] != null) {
       double SOC = double.parse(bs['SOC']['Value']);
-      this.batteryPercentage =
-          new NumberFormat('0.0').format(SOC).toString() + '%';
+      this.batteryPercentage = NumberFormat('0.0').format(SOC).toString() + '%';
     }
     if (batteryLevelCapacity >= 0.0 && batteryLevelCapacity <= 12.0) {
       // Leaf using 12th bar system; present as 12ths; 5/12 etc.
       // batteryLevelCapacity can be lower than 12 because of degradation
       // we explicitly use 12 instead of batteryLevelCapacity
-      this.battery12thBar =
-      "${numberFormat.format(batteryLevel)} / 12";
-      this.batteryPercentage = new NumberFormat('0.0')
-        .format((this.batteryLevel * 100) / 12)
-        .toString() +
-        '%';
+      this.battery12thBar = '${numberFormat.format(batteryLevel)} / 12';
+      this.batteryPercentage = NumberFormat('0.0')
+              .format((this.batteryLevel * 100) / 12)
+              .toString() +
+          '%';
     }
     this.cruisingRangeAcOffKm =
         numberFormat.format(double.parse(recs['CruisingRangeAcOff']) / 1000) +
             ' km';
     this.cruisingRangeAcOffMiles = numberFormat
-        .format(double.parse(recs['CruisingRangeAcOff']) * 0.0006213712) +
+            .format(double.parse(recs['CruisingRangeAcOff']) * 0.0006213712) +
         ' mi';
     this.cruisingRangeAcOnKm =
         numberFormat.format(double.parse(recs['CruisingRangeAcOn']) / 1000) +
             ' km';
     this.cruisingRangeAcOnMiles = numberFormat
-        .format(double.parse(recs['CruisingRangeAcOn']) * 0.0006213712) +
+            .format(double.parse(recs['CruisingRangeAcOn']) * 0.0006213712) +
         ' mi';
     this.timeToFullTrickle =
-    new Duration(minutes: _timeRemaining(recs['TimeRequiredToFull']));
+        Duration(minutes: _timeRemaining(recs['TimeRequiredToFull']));
     this.timeToFullL2 =
-    new Duration(minutes: _timeRemaining(recs['TimeRequiredToFull200']));
-    this.timeToFullL2_6kw = new Duration(
-        minutes: _timeRemaining(recs['TimeRequiredToFull200_6kW']));
+        Duration(minutes: _timeRemaining(recs['TimeRequiredToFull200']));
+    this.timeToFullL2_6kw =
+        Duration(minutes: _timeRemaining(recs['TimeRequiredToFull200_6kW']));
     if (isQuickCharging) {
-      chargingkWLevelText = "left to charge at ~40kW";
-      chargingRemainingText = "usually 50 mins";
+      chargingkWLevelText = 'left to charge at ~40kW';
+      chargingRemainingText = 'usually 50 mins';
     } else if (timeToFullTrickle.inHours != 0) {
-      chargingkWLevelText = "left to charge at ~1kW";
+      chargingkWLevelText = 'left to charge at ~1kW';
       chargingRemainingText =
-      "${(timeToFullTrickle.inMinutes / 60).floor()} hrs ${timeToFullTrickle
-          .inMinutes % 60} mins";
+          '${(timeToFullTrickle.inMinutes / 60).floor()} hrs ${timeToFullTrickle.inMinutes % 60} mins';
     } else if (timeToFullL2.inHours != 0) {
-      chargingkWLevelText = "left to charge at ~3kW";
+      chargingkWLevelText = 'left to charge at ~3kW';
       chargingRemainingText =
-      "${(timeToFullL2.inMinutes / 60).floor()} hrs ${timeToFullL2.inMinutes %
-          60} mins";
+          '${(timeToFullL2.inMinutes / 60).floor()} hrs ${timeToFullL2.inMinutes % 60} mins';
     } else if (timeToFullL2_6kw.inHours != 0) {
-      chargingkWLevelText = "left to charge at ~6kW";
+      chargingkWLevelText = 'left to charge at ~6kW';
       chargingRemainingText =
-      "${(timeToFullL2_6kw.inMinutes / 60).floor()} hrs ${timeToFullL2_6kw
-          .inMinutes % 60} mins";
+          '${(timeToFullL2_6kw.inMinutes / 60).floor()} hrs ${timeToFullL2_6kw.inMinutes % 60} mins';
     }
   }
 

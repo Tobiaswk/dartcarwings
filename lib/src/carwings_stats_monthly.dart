@@ -15,13 +15,13 @@ class CarwingsStatsMonthly {
     var r = params['PriceSimulatorDetailInfoResponsePersonalData'];
     var t = r['PriceSimulatorTotalInfo'];
 
-    NumberFormat numberFormat = new NumberFormat('0.00');
+    NumberFormat numberFormat = NumberFormat('0.00');
 
     this.electricCostScale =
-        params["PriceSimulatorDetailInfoResponsePersonalData"]
+        params['PriceSimulatorDetailInfoResponsePersonalData']
             ['ElectricCostScale'];
 
-    this.dateTime = new DateFormat('MMM/y').parse(r['DisplayMonth']);
+    this.dateTime = DateFormat('MMM/y').parse(r['DisplayMonth']);
     this.totalNumberOfTrips = t['TotalNumberOfTrips'];
     this.totalConsumptionKWh =
         numberFormat.format(double.parse(t['TotalPowerConsumptTotal'])) +
@@ -29,7 +29,7 @@ class CarwingsStatsMonthly {
     // For some reason electricCostScale can vary from country to country
     if (electricCostScale == 'kWh/km') {
       this.mileageUnit = 'km';
-      this.totalTravelDistanceMileage = new NumberFormat('0')
+      this.totalTravelDistanceMileage = NumberFormat('0')
               .format(double.parse(t['TotalTravelDistance']) / 1000) +
           ' ' +
           mileageUnit;
@@ -46,7 +46,7 @@ class CarwingsStatsMonthly {
           '/kWh';
     } else if (electricCostScale == 'km/kWh') {
       this.mileageUnit = 'km';
-      this.totalTravelDistanceMileage = new NumberFormat('0')
+      this.totalTravelDistanceMileage = NumberFormat('0')
               .format(double.parse(t['TotalTravelDistance']) / 1000) +
           ' ' +
           mileageUnit;
@@ -63,7 +63,7 @@ class CarwingsStatsMonthly {
           '/kWh';
     } else if (electricCostScale == 'kWh/100km') {
       this.mileageUnit = 'km';
-      this.totalTravelDistanceMileage = new NumberFormat('0')
+      this.totalTravelDistanceMileage = NumberFormat('0')
               .format(double.parse(t['TotalTravelDistance']) / 1000) +
           ' ' +
           mileageUnit;
@@ -80,7 +80,7 @@ class CarwingsStatsMonthly {
           '/kWh';
     } else if (electricCostScale == 'miles/kWh') {
       this.mileageUnit = 'mi';
-      this.totalTravelDistanceMileage = new NumberFormat('0')
+      this.totalTravelDistanceMileage = NumberFormat('0')
               .format(double.parse(t['TotalTravelDistance']) * 0.0006213712) +
           ' ' +
           mileageUnit;
@@ -99,7 +99,7 @@ class CarwingsStatsMonthly {
           '/kWh';
     } else /*if(electricCostScale == 'kWh/miles')*/ {
       this.mileageUnit = 'mi';
-      this.totalTravelDistanceMileage = new NumberFormat('0')
+      this.totalTravelDistanceMileage = NumberFormat('0')
               .format(double.parse(t['TotalTravelDistance']) * 0.0006213712) +
           ' ' +
           mileageUnit;

@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 
 class CarwingsUnitCalculator {
-  NumberFormat numberFormat00 = new NumberFormat('0.00');
-  NumberFormat numberFormat0 = new NumberFormat('0');
+  NumberFormat numberFormat00 = NumberFormat('0.00');
+  NumberFormat numberFormat0 = NumberFormat('0');
 
   String mileagePerKwh(
       double distanceInMeters, double consumption, String electricCostScale) {
@@ -15,7 +15,8 @@ class CarwingsUnitCalculator {
               .format(1 / (consumption / toKilometers(distanceInMeters))) +
           ' km/kWh';
     } else if (electricCostScale == 'kWh/100km') {
-      numberFormat00.format(1 / (consumption / toKilometers(distanceInMeters))) +
+      numberFormat00
+              .format(1 / (consumption / toKilometers(distanceInMeters))) +
           ' km/kWh';
     } else if (electricCostScale == 'miles/kWh') {
       return numberFormat00
@@ -32,13 +33,16 @@ class CarwingsUnitCalculator {
   String kWhPerMileage(
       double distanceInMeters, double consumption, String electricCostScale) {
     if (electricCostScale == 'kWh/km') {
-      return numberFormat00.format(consumption / toKilometers(distanceInMeters)) +
+      return numberFormat00
+              .format(consumption / toKilometers(distanceInMeters)) +
           ' kWh/km';
     } else if (electricCostScale == 'km/kWh') {
-      return numberFormat00.format(consumption / toKilometers(distanceInMeters)) +
+      return numberFormat00
+              .format(consumption / toKilometers(distanceInMeters)) +
           ' kWh/km';
     } else if (electricCostScale == 'kWh/100km') {
-      return numberFormat00.format(consumption / toKilometers(distanceInMeters)) +
+      return numberFormat00
+              .format(consumption / toKilometers(distanceInMeters)) +
           ' kWh/km';
     } else if (electricCostScale == 'miles/kWh') {
       return numberFormat00.format(consumption / toMiles(distanceInMeters)) +
@@ -52,21 +56,16 @@ class CarwingsUnitCalculator {
 
   String distance(double distanceInMeters, String electricCostScale) {
     if (electricCostScale == 'kWh/km') {
-      return numberFormat0.format(toKilometers(distanceInMeters)) +
-          ' km';
+      return numberFormat0.format(toKilometers(distanceInMeters)) + ' km';
     } else if (electricCostScale == 'km/kWh') {
-      return numberFormat0.format(toKilometers(distanceInMeters)) +
-          ' km';
+      return numberFormat0.format(toKilometers(distanceInMeters)) + ' km';
     } else if (electricCostScale == 'kWh/100km') {
-      return numberFormat0.format(toKilometers(distanceInMeters)) +
-          ' km';
+      return numberFormat0.format(toKilometers(distanceInMeters)) + ' km';
     } else if (electricCostScale == 'miles/kWh') {
-      return numberFormat0.format(toMiles(distanceInMeters)) +
-          ' mi';
+      return numberFormat0.format(toMiles(distanceInMeters)) + ' mi';
     } else
-      /*if(electricCostScale == 'kWh/miles')*/ {
-      return numberFormat0.format(toMiles(distanceInMeters)) +
-          ' mi';
+    /*if(electricCostScale == 'kWh/miles')*/ {
+      return numberFormat0.format(toMiles(distanceInMeters)) + ' mi';
     }
   }
 

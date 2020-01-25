@@ -10,7 +10,7 @@ class CarwingsStatsTrips {
     CarwingsUnitCalculator carwingsUnitCalculator = CarwingsUnitCalculator();
 
     var electricCostScale =
-        params["PriceSimulatorDetailInfoResponsePersonalData"]
+        params['PriceSimulatorDetailInfoResponsePersonalData']
             ['ElectricCostScale'];
 
     List statsPerDate = params['PriceSimulatorDetailInfoResponsePersonalData']

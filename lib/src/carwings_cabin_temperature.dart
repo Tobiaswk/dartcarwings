@@ -8,11 +8,10 @@ class CarwingsCabinTemperature {
   }
 
   CarwingsCabinTemperature.latest(Map params) {
-    var data = params["CabinTemp"];
+    var data = params['CabinTemp'];
 
     //this.timeStamp = new DateFormat('yyyy/M/d H:m').parse(data['DateAndTime']);
     this.timeStamp = DateTime.now();
     this.temperature = data['Inc_temp'];
   }
-
 }

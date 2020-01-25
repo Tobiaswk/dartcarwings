@@ -17,12 +17,12 @@ class CarwingsStatsDaily {
     var summary =
         params['DriveAnalysisBasicScreenResponsePersonalData']['DateSummary'];
 
-    NumberFormat numberFormat = new NumberFormat('0.00');
+    NumberFormat numberFormat = NumberFormat('0.00');
 
-    this.dateTime = new DateFormat('yyyy-MM-dd').parse(summary['TargetDate']);
+    this.dateTime = DateFormat('yyyy-MM-dd').parse(summary['TargetDate']);
     this.electricCostScale =
-        params["DriveAnalysisBasicScreenResponsePersonalData"]
-            ["ElectricCostScale"];
+        params['DriveAnalysisBasicScreenResponsePersonalData']
+            ['ElectricCostScale'];
     // For some reason electricCostScale can vary from country to country
     if (electricCostScale == 'kWh/km') {
       this.KWhPerMileage =
@@ -49,9 +49,9 @@ class CarwingsStatsDaily {
       this.KWhPerMileage =
           numberFormat.format(1 / double.parse(summary['ElectricMileage'])) +
               ' kWh/mi';
-      this.mileagePerKWh = numberFormat
-          .format(double.parse(summary['ElectricMileage'])) +
-          ' mi/kWh';
+      this.mileagePerKWh =
+          numberFormat.format(double.parse(summary['ElectricMileage'])) +
+              ' mi/kWh';
     } else {
       this.KWhPerMileage =
           numberFormat.format(double.parse(summary['ElectricMileage'])) +
@@ -60,17 +60,17 @@ class CarwingsStatsDaily {
           numberFormat.format((1 / double.parse(summary['ElectricMileage']))) +
               ' mi/kWh';
     }
-    this.mileageLevel = summary['ElectricMileageLevel'] ?? "0";
+    this.mileageLevel = summary['ElectricMileageLevel'] ?? '0';
     this.accelerationWh =
         numberFormat.format(double.parse(summary['PowerConsumptMoter'])) +
             ' Wh';
-    this.accelerationLevel = summary['PowerConsumptMoterLevel'] ?? "0";
+    this.accelerationLevel = summary['PowerConsumptMoterLevel'] ?? '0';
     this.regenerativeWh =
         numberFormat.format(double.parse(summary['PowerConsumptMinus'])) +
             ' Wh';
-    this.regenerativeLevel = summary['PowerConsumptMinusLevel'] ?? "0";
+    this.regenerativeLevel = summary['PowerConsumptMinusLevel'] ?? '0';
     this.auxWh =
         numberFormat.format(double.parse(summary['PowerConsumptAUX'])) + ' Wh';
-    this.auxLevel = summary['PowerConsumptAUXLevel'] ?? "0";
+    this.auxLevel = summary['PowerConsumptAUXLevel'] ?? '0';
   }
 }

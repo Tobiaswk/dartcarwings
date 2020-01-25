@@ -6,18 +6,18 @@ import 'package:dartcarwings/src/carwings_vehicle.dart';
 enum CarwingsRegion { USA, Europe, Canada, Australia, Japan }
 
 class CarwingsSession {
-  final String baseUrl = "https://gdcportalgw.its-mo.com/api_v190426_NE/gdc/";
+  final String baseUrl = 'https://gdcportalgw.its-mo.com/api_v190426_NE/gdc/';
 
   // Result of the call to InitialApp.php, which appears to
   // always be the same.  It'll probably break at some point but
   // for now... skip it.
-  final String blowfishKey = "uyI5Dj9g8VCOFDnBRUbr3g";
+  final String blowfishKey = 'uyI5Dj9g8VCOFDnBRUbr3g';
 
   // Extracted from the NissanConnect EV app
-  final String initialAppStrings = "9s5rfKVuMrT03RtzajWNcA";
+  final String initialAppStrings = '9s5rfKVuMrT03RtzajWNcA';
 
   bool debug;
-  List<String> debugLog = new List<String>();
+  List<String> debugLog = List<String>();
 
   // If this is set it will override the time zone returned from Carwings API
   var timeZoneOverride;
@@ -69,7 +69,7 @@ class CarwingsSession {
     _print('Params: $params');
 
     http.Response response =
-        await http.post("${baseUrl}${endpoint}", body: params);
+        await http.post('${baseUrl}${endpoint}', body: params);
 
     dynamic jsonData = json.decode(response.body);
 
@@ -91,54 +91,54 @@ class CarwingsSession {
 
     loggedIn = false;
 
-    var response = await request("InitialApp_v2.php",
-        {"RegionCode": _getRegionName(region), "lg": "en-US"});
+    var response = await request('InitialApp_v2.php',
+        {'RegionCode': _getRegionName(region), 'lg': 'en-US'});
 
     var encodedPassword =
         await blowfishEncryptCallback(response['baseprm'], password);
 
-    response = await request("UserLoginRequest.php", {
-      "RegionCode": _getRegionName(region),
-      "UserId": username,
-      "Password": encodedPassword
+    response = await request('UserLoginRequest.php', {
+      'RegionCode': _getRegionName(region),
+      'UserId': username,
+      'Password': encodedPassword
     });
 
     if (response['status'] != 200) {
       throw 'Login error';
     }
 
-    language = response['CustomerInfo']["Language"];
-    gdcUserId = response["vehicle"]["profile"]["gdcUserId"];
-    dcmId = response["vehicle"]["profile"]["dcmId"];
-    timeZoneProvided = response["CustomerInfo"]["Timezone"];
+    language = response['CustomerInfo']['Language'];
+    gdcUserId = response['vehicle']['profile']['gdcUserId'];
+    dcmId = response['vehicle']['profile']['dcmId'];
+    timeZoneProvided = response['CustomerInfo']['Timezone'];
     // With more than one vehicle this value makes little sense
     try {
-      modelYear = int.parse(response["vehicle"]["profile"]["modelyear"]);
+      modelYear = int.parse(response['vehicle']['profile']['modelyear']);
     } catch (e) {}
 
     loggedIn = true;
 
-    vehicles = new List<CarwingsVehicle>();
+    vehicles = List<CarwingsVehicle>();
     // For some odd reason VehicleInfoList is not present on 1th gen Leafs
     // It is only there for 2nd gen Leafs
-    if (response["VehicleInfoList"] != null) {
-      for (Map vehicleInfo in response["VehicleInfoList"]["vehicleInfo"]) {
-        vehicles.add(new CarwingsVehicle(
+    if (response['VehicleInfoList'] != null) {
+      for (Map vehicleInfo in response['VehicleInfoList']['vehicleInfo']) {
+        vehicles.add(CarwingsVehicle(
             this,
             vehicleInfo['custom_sessionid'],
             vehicleInfo['vin'],
             vehicleInfo['nickname'],
-            response["CustomerInfo"]["VehicleInfo"]["UserVehicleBoundTime"],
+            response['CustomerInfo']['VehicleInfo']['UserVehicleBoundTime'],
             response['CustomerInfo']['VehicleInfo']['CarName']));
       }
     } else {
-      for (Map vehicleInfo in response["vehicleInfo"]) {
-        vehicles.add(new CarwingsVehicle(
+      for (Map vehicleInfo in response['vehicleInfo']) {
+        vehicles.add(CarwingsVehicle(
             this,
             vehicleInfo['custom_sessionid'],
             vehicleInfo['vin'],
             vehicleInfo['nickname'],
-            response["CustomerInfo"]["VehicleInfo"]["UserVehicleBoundTime"],
+            response['CustomerInfo']['VehicleInfo']['UserVehicleBoundTime'],
             response['CustomerInfo']['VehicleInfo']['CarName']));
       }
     }
@@ -164,17 +164,17 @@ class CarwingsSession {
   String _getRegionName(CarwingsRegion region) {
     switch (region) {
       case CarwingsRegion.USA:
-        return "NNA";
+        return 'NNA';
       case CarwingsRegion.Europe:
-        return "NE";
+        return 'NE';
       case CarwingsRegion.Canada:
-        return "NCI";
+        return 'NCI';
       case CarwingsRegion.Australia:
-        return "NMA";
+        return 'NMA';
       case CarwingsRegion.Japan:
-        return "NML";
+        return 'NML';
       default:
-        return "NE";
+        return 'NE';
     }
   }
 
