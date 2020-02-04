@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:dartcarwings/src/carwings_vehicle.dart';
 
-enum CarwingsRegion { USA, Europe, Canada, Australia, Japan }
+enum CarwingsRegion { World, USA, Europe, Canada, Australia, Japan }
 
 class CarwingsSession {
   final String baseUrl = 'https://gdcportalgw.its-mo.com/api_v190426_NE/gdc/';
