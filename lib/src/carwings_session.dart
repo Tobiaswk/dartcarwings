@@ -65,7 +65,6 @@ class CarwingsSession {
       params['custom_sessionid'] = '';
     }
 
-    _print('------------------------------------');
     _print('Invoking Carwings API: $endpoint');
     _print('Params: $params');
 
@@ -75,7 +74,6 @@ class CarwingsSession {
     dynamic jsonData = json.decode(response.body);
 
     _print('Result: $jsonData');
-    _print('------------------------------------');
 
     return jsonData;
   }
@@ -182,8 +180,8 @@ class CarwingsSession {
 
   _print(message) {
     if (debug) {
-      print(message);
-      debugLog.add(message);
+      print('\$ $message');
+      debugLog.add('\$ $message');
     }
   }
 }
