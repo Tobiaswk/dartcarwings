@@ -1,10 +1,10 @@
 class CarwingsCabinTemperature {
   DateTime timeStamp;
-  var temperature;
+  double temperature;
 
   CarwingsCabinTemperature(Map params) {
     timeStamp = DateTime.now();
-    this.temperature = params['Inc_temp'];
+    this.temperature = double.parse(params['Inc_temp'].toString());
   }
 
   CarwingsCabinTemperature.latest(Map params) {
@@ -12,6 +12,6 @@ class CarwingsCabinTemperature {
 
     //this.timeStamp = new DateFormat('yyyy/M/d H:m').parse(data['DateAndTime']);
     this.timeStamp = DateTime.now();
-    this.temperature = data['Inc_temp'];
+    this.temperature = double.parse(data['Inc_temp'].toString());
   }
 }
