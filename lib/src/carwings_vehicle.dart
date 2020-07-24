@@ -11,8 +11,6 @@ import 'package:intl/intl.dart';
 
 class CarwingsVehicle {
   final int MAX_RETRIES = 15;
-  static const int CLIMATE_TEMPERATURE = 21;
-  static const String CLIMATE_TEMPERATURE_UNIT = 'C';
 
   var _executeTimeFormatter = DateFormat('yyyy-MM-dd H:m');
   var _displayExecuteTimeFormatter = DateFormat('dd-MM-yyyy H:m');
@@ -71,16 +69,13 @@ class CarwingsVehicle {
     return null;
   }
 
-  Future<Null> requestClimateControlOn(
-      {int temperature = CLIMATE_TEMPERATURE}) async {
+  Future<Null> requestClimateControlOn() async {
     var response = await session.requestWithRetry('ACRemoteRequest.php', {
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
       'VIN': vin,
       'tz': session.timeZone,
-      'PreAC_temp': temperature.toString(),
-      'PreAC_unit': CLIMATE_TEMPERATURE_UNIT
     });
 
     int retries = MAX_RETRIES;
@@ -144,8 +139,7 @@ class CarwingsVehicle {
 
   // For some weird reason ExecuteTime is always in UTC/GMT
   // regardless of tz
-  Future<Null> requestClimateControlSchedule(DateTime startTime,
-      {int temperature = CLIMATE_TEMPERATURE}) async {
+  Future<Null> requestClimateControlSchedule(DateTime startTime) async {
     var response = await session.requestWithRetry('ACRemoteUpdateRequest.php', {
       'RegionCode': session.getRegion(),
       'lg': session.language,
@@ -153,8 +147,6 @@ class CarwingsVehicle {
       'VIN': vin,
       'tz': session.timeZone,
       'ExecuteTime': _executeTimeFormatter.format(startTime.toUtc()),
-      'PreAC_temp': temperature.toString(),
-      'PreAC_unit': CLIMATE_TEMPERATURE_UNIT
     });
     if (responseValidHandler(response)) {
       return;
