@@ -13,7 +13,6 @@ class CarwingsVehicle {
   final int MAX_RETRIES = 15;
 
   var _executeTimeFormatter = DateFormat('yyyy-MM-dd H:m');
-  var _displayExecuteTimeFormatter = DateFormat('dd-MM-yyyy H:m');
   var _targetMonthFormatter = DateFormat('yyyyMM');
 
   CarwingsSession session;
@@ -178,9 +177,9 @@ class CarwingsVehicle {
       'tz': session.timeZone
     });
     if (responseValidHandler(response)) {
-      if (response['DisplayExecuteTime'] != '') {
-        return _displayExecuteTimeFormatter
-            .parse(response['DisplayExecuteTime']);
+      if (response['ExecuteTime'] != '') {
+        return _executeTimeFormatter
+            .parse(response['ExecuteTime'], true).toLocal();
       }
     }
   }

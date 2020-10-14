@@ -64,25 +64,30 @@ class CarwingsBattery {
     // Until better timezone support has been added to Dart this will do
     try {
       this.dateTime =
-          DateFormat('d-M-yyyy H:m').parse(recs['OperationDateAndTime']);
+          DateFormat('yyyy/MM/dd H:m').parse(recs['TargetDate'], true).toLocal();
     } catch (e) {
       try {
         this.dateTime =
-            DateFormat('dd-MMM-yyyy H:m').parse(recs['OperationDateAndTime']);
+            DateFormat('d-M-yyyy H:m').parse(recs['OperationDateAndTime']);
       } catch (e) {
         try {
-          this.dateTime = DateFormat('DD.MMM yyyy HH:mm')
-              .parse(recs['OperationDateAndTime']);
+          this.dateTime =
+              DateFormat('dd-MMM-yyyy H:m').parse(recs['OperationDateAndTime']);
         } catch (e) {
           try {
-            this.dateTime = DateFormat('MMM DD, yyyy HH:mm a')
+            this.dateTime = DateFormat('DD.MMM yyyy HH:mm')
                 .parse(recs['OperationDateAndTime']);
           } catch (e) {
             try {
-              this.dateTime = DateFormat('d-MMM-yyyy HH:mm')
+              this.dateTime = DateFormat('MMM DD, yyyy HH:mm a')
                   .parse(recs['OperationDateAndTime']);
             } catch (e) {
-              this.dateTime = DateTime.now(); // Just use now
+              try {
+                this.dateTime = DateFormat('d-MMM-yyyy HH:mm')
+                    .parse(recs['OperationDateAndTime']);
+              } catch (e) {
+                this.dateTime = DateTime.now(); // Just use now
+              }
             }
           }
         }
