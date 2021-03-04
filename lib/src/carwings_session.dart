@@ -17,7 +17,7 @@ class CarwingsSession {
   final String initialAppStrings = '9s5rfKVuMrT03RtzajWNcA';
 
   bool debug;
-  List<String> debugLog = List<String>();
+  List<String> debugLog = <String>[];
 
   // If this is set it will override the time zone returned from Carwings API
   var timeZoneOverride;
@@ -118,7 +118,7 @@ class CarwingsSession {
 
     loggedIn = true;
 
-    vehicles = List<CarwingsVehicle>();
+    vehicles = <CarwingsVehicle>[];
     // For some odd reason VehicleInfoList is not present on 1th gen Leafs
     // It is only there for 2nd gen Leafs
     if (response['VehicleInfoList'] != null) {
