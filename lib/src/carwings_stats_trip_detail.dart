@@ -1,9 +1,9 @@
 class CarwingsStatsTripDetail {
-  DateTime date;
-  int number;
-  String kWhPerMileage;
-  String mileagePerKWh;
-  String consumptionKWh;
-  String travelDistanceMileage;
-  String CO2Reduction;
+  late DateTime date;
+  late int number;
+  late String kWhPerMileage;
+  late String mileagePerKWh;
+  late String consumptionKWh;
+  late String travelDistanceMileage;
+  late String CO2Reduction;
 }

@@ -3,25 +3,25 @@ import 'package:intl/intl.dart';
 class CarwingsBattery {
   NumberFormat numberFormat = NumberFormat('0');
 
-  DateTime dateTime;
-  double batteryLevelCapacity;
-  double batteryLevel;
+  late DateTime dateTime;
+  late double batteryLevelCapacity;
+  late double batteryLevel;
   bool isConnected = false;
   bool isCharging = false;
   bool isQuickCharging = false;
   bool isConnectedToQuickCharging = false;
-  String batteryPercentage;
-  String
+  late String batteryPercentage;
+  String?
       battery12thBar; // Leaf using 12th bar system; present as 12ths; 5/12 etc.
-  String cruisingRangeAcOffKm;
-  String cruisingRangeAcOffMiles;
-  String cruisingRangeAcOnKm;
-  String cruisingRangeAcOnMiles;
-  Duration timeToFullTrickle;
-  Duration timeToFullL2;
-  Duration timeToFullL2_6kw;
-  String chargingkWLevelText;
-  String chargingRemainingText;
+  late String cruisingRangeAcOffKm;
+  late String cruisingRangeAcOffMiles;
+  late String cruisingRangeAcOnKm;
+  late String cruisingRangeAcOnMiles;
+  late Duration timeToFullTrickle;
+  late Duration timeToFullL2;
+  late Duration timeToFullL2_6kw;
+  late String chargingkWLevelText;
+  late String chargingRemainingText;
 
   CarwingsBattery(Map params) {
     //this.timeStamp = new DateFormat('yyyy-MM-dd H:m:s').parse(params['timeStamp']);
@@ -63,8 +63,9 @@ class CarwingsBattery {
     // These are in UTC
     // Until better timezone support has been added to Dart this will do
     try {
-      this.dateTime =
-          DateFormat('yyyy/MM/dd H:m').parse(recs['TargetDate'], true).toLocal();
+      this.dateTime = DateFormat('yyyy/MM/dd H:m')
+          .parse(recs['TargetDate'], true)
+          .toLocal();
     } catch (e) {
       try {
         this.dateTime =
@@ -154,7 +155,7 @@ class CarwingsBattery {
     }
   }
 
-  int _timeRemaining(Map params) {
+  int _timeRemaining(Map? params) {
     int minutes = 0;
     if (params != null) {
       if (params['hours'] != null && params['hours'] != '') {

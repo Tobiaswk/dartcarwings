@@ -1,6 +1,6 @@
 class CarwingsCabinTemperature {
-  DateTime timeStamp;
-  double temperature;
+  late DateTime timeStamp;
+  late double temperature;
 
   CarwingsCabinTemperature(Map params) {
     timeStamp = DateTime.now();

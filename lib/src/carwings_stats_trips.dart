@@ -4,7 +4,7 @@ import 'package:dartcarwings/src/carwings_unit_calculator.dart';
 import 'package:intl/intl.dart';
 
 class CarwingsStatsTrips {
-  List<CarwingsStatsTrip> trips = List();
+  List<CarwingsStatsTrip> trips = [];
 
   CarwingsStatsTrips(Map params) {
     CarwingsUnitCalculator carwingsUnitCalculator = CarwingsUnitCalculator();
