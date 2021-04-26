@@ -1,15 +1,15 @@
 import 'package:intl/intl.dart';
 
 class CarwingsStatsMonthly {
-  DateTime dateTime;
-  String electricCostScale;
-  String mileageUnit;
-  String totalNumberOfTrips;
-  String totalkWhPerMileage;
-  String totalMileagePerKWh;
-  String totalConsumptionKWh;
-  String totalTravelDistanceMileage;
-  String totalCO2Reduction;
+  late DateTime dateTime;
+  late String electricCostScale;
+  late String mileageUnit;
+  late String totalNumberOfTrips;
+  late String totalkWhPerMileage;
+  late String totalMileagePerKWh;
+  late String totalConsumptionKWh;
+  late String totalTravelDistanceMileage;
+  late String totalCO2Reduction;
 
   CarwingsStatsMonthly(Map params) {
     var r = params['PriceSimulatorDetailInfoResponsePersonalData'];

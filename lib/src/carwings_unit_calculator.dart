@@ -15,7 +15,7 @@ class CarwingsUnitCalculator {
               .format(1 / (consumption / toKilometers(distanceInMeters))) +
           ' km/kWh';
     } else if (electricCostScale == 'kWh/100km') {
-      numberFormat00
+      return numberFormat00
               .format(1 / (consumption / toKilometers(distanceInMeters))) +
           ' km/kWh';
     } else if (electricCostScale == 'miles/kWh') {

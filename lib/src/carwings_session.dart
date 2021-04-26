@@ -20,11 +20,11 @@ class CarwingsSession {
   List<String> debugLog = <String>[];
 
   // If this is set it will override the time zone returned from Carwings API
-  var timeZoneOverride;
+  String? timeZoneOverride;
 
   var username;
   var password;
-  CarwingsRegion region;
+  late CarwingsRegion region;
   bool loggedIn = false;
   var gdcUserId;
   var timeZoneProvided;
@@ -34,8 +34,8 @@ class CarwingsSession {
 
   var blowfishEncryptCallback;
 
-  CarwingsVehicle vehicle;
-  List<CarwingsVehicle> vehicles;
+  late CarwingsVehicle vehicle;
+  List<CarwingsVehicle> vehicles = [];
 
   CarwingsSession({this.debug = false, this.timeZoneOverride});
 
@@ -59,17 +59,12 @@ class CarwingsSession {
 
   Future<dynamic> request(String endpoint, Map params) async {
     params['initial_app_str'] = initialAppStrings;
-    if (vehicle != null && vehicle.customSessionID != null) {
-      params['custom_sessionid'] = vehicle.customSessionID;
-    } else {
-      params['custom_sessionid'] = '';
-    }
 
     _print('Invoking Carwings API: $endpoint');
     _print('Params: $params');
 
     http.Response response =
-        await http.post('${baseUrl}${endpoint}', body: params);
+        await http.post(Uri.parse('${baseUrl}${endpoint}'), body: params);
 
     dynamic jsonData = json.decode(response.body);
 
@@ -79,10 +74,10 @@ class CarwingsSession {
   }
 
   Future<CarwingsVehicle> login(
-      {String username,
-      String password,
+      {required String username,
+      required String password,
       CarwingsRegion region = CarwingsRegion.Europe,
-      Future<String> blowfishEncryptCallback(
+      required Future<String> blowfishEncryptCallback(
           String key, String password)}) async {
     this.username = username;
     this.password = password;
@@ -118,7 +113,6 @@ class CarwingsSession {
 
     loggedIn = true;
 
-    vehicles = <CarwingsVehicle>[];
     // For some odd reason VehicleInfoList is not present on 1th gen Leafs
     // It is only there for 2nd gen Leafs
     if (response['VehicleInfoList'] != null) {
@@ -147,13 +141,14 @@ class CarwingsSession {
     return vehicle;
   }
 
-  String get timeZone => timeZoneOverride != null && timeZoneOverride.isNotEmpty
-      ? timeZoneOverride
-      : timeZoneProvided;
+  String get timeZone =>
+      timeZoneOverride != null && timeZoneOverride!.isNotEmpty
+          ? timeZoneOverride
+          : timeZoneProvided;
 
   bool get isFirstGeneration => modelYear < 18;
 
-  setTimeZoneOverride(String tz) {
+  setTimeZoneOverride(String? tz) {
     timeZoneOverride = tz;
   }
 

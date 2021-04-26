@@ -1,17 +1,17 @@
 import 'package:intl/intl.dart';
 
 class CarwingsStatsDaily {
-  DateTime dateTime;
-  String mileagePerKWh;
-  String KWhPerMileage;
-  String mileageLevel;
-  String accelerationWh;
-  String accelerationLevel;
-  String regenerativeWh;
-  String regenerativeLevel;
-  String auxWh;
-  String auxLevel;
-  String electricCostScale;
+  late DateTime dateTime;
+  late String mileagePerKWh;
+  late String KWhPerMileage;
+  late String mileageLevel;
+  late String accelerationWh;
+  late String accelerationLevel;
+  late String regenerativeWh;
+  late String regenerativeLevel;
+  late String auxWh;
+  late String auxLevel;
+  late String electricCostScale;
 
   CarwingsStatsDaily(Map params) {
     var summary =

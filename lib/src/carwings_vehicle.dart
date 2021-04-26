@@ -29,9 +29,10 @@ class CarwingsVehicle {
     return DateTime.parse(this.boundTime);
   }
 
-  Future<CarwingsBattery> requestBatteryStatus() async {
+  Future<CarwingsBattery?> requestBatteryStatus() async {
     var response =
         await session.requestWithRetry('BatteryStatusCheckRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -40,7 +41,7 @@ class CarwingsVehicle {
       'UserId': session.gdcUserId
     });
 
-    CarwingsBattery battery;
+    CarwingsBattery? battery;
 
     int retries = MAX_RETRIES;
     while (responseValidHandler(response, retries: retries--)) {
@@ -52,9 +53,10 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsBattery> _getBatteryStatus(String resultKey) async {
+  Future<CarwingsBattery?> _getBatteryStatus(String resultKey) async {
     var response =
         await session.requestWithRetry('BatteryStatusCheckResultRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -70,6 +72,7 @@ class CarwingsVehicle {
 
   Future<Null> requestClimateControlOn() async {
     var response = await session.requestWithRetry('ACRemoteRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -88,6 +91,7 @@ class CarwingsVehicle {
 
   Future<bool> _getClimateControlOnStatus(String resultKey) async {
     var response = await session.requestWithRetry('ACRemoteResult.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -104,6 +108,7 @@ class CarwingsVehicle {
 
   Future<Null> requestClimateControlOff() async {
     var response = await session.requestWithRetry('ACRemoteOffRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -122,6 +127,7 @@ class CarwingsVehicle {
 
   Future<bool> _getClimateControlOffStatus(String resultKey) async {
     var response = await session.requestWithRetry('ACRemoteOffResult.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -140,6 +146,7 @@ class CarwingsVehicle {
   // regardless of tz
   Future<Null> requestClimateControlSchedule(DateTime startTime) async {
     var response = await session.requestWithRetry('ACRemoteUpdateRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -154,6 +161,7 @@ class CarwingsVehicle {
 
   Future<Null> requestClimateControlScheduleCancel() async {
     var response = await session.requestWithRetry('ACRemoteCancelRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -167,9 +175,10 @@ class CarwingsVehicle {
 
   // For some weird reason DisplayExecuteTime returns time in local time zone
   // ExecuteTime is also available is in UTC/GMT
-  Future<DateTime> requestClimateControlScheduleGet() async {
+  Future<DateTime?> requestClimateControlScheduleGet() async {
     var response =
         await session.requestWithRetry('GetScheduledACRemoteRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -179,7 +188,8 @@ class CarwingsVehicle {
     if (responseValidHandler(response)) {
       if (response['ExecuteTime'] != '') {
         return _executeTimeFormatter
-            .parse(response['ExecuteTime'], true).toLocal();
+            .parse(response['ExecuteTime'], true)
+            .toLocal();
       }
     }
   }
@@ -189,6 +199,7 @@ class CarwingsVehicle {
   Future<Null> requestChargingStart(DateTime startTime) async {
     var response =
         await session.requestWithRetry('BatteryRemoteChargingRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -201,9 +212,10 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsStatsMonthly> requestStatisticsMonthly(DateTime month) async {
+  Future<CarwingsStatsMonthly?> requestStatisticsMonthly(DateTime month) async {
     var response =
         await session.requestWithRetry('PriceSimulatorDetailInfoRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -216,10 +228,11 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsStatsTrips> requestStatisticsMonthlyTrips(
+  Future<CarwingsStatsTrips?> requestStatisticsMonthlyTrips(
       DateTime month) async {
     var response =
         await session.requestWithRetry('PriceSimulatorDetailInfoRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -232,9 +245,10 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsStatsDaily> requestStatisticsDaily() async {
+  Future<CarwingsStatsDaily?> requestStatisticsDaily() async {
     var response = await session
         .requestWithRetry('DriveAnalysisBasicScreenRequestEx.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -246,9 +260,10 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsHVAC> requestHVACStatus() async {
+  Future<CarwingsHVAC?> requestHVACStatus() async {
     var response =
         await session.requestWithRetry('RemoteACRecordsRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -261,8 +276,9 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsCabinTemperature> requestCabinTemperatureLatest() async {
+  Future<CarwingsCabinTemperature?> requestCabinTemperatureLatest() async {
     var response = await session.requestWithRetry('CheckCabinTemp.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -275,9 +291,10 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsCabinTemperature> requestCabinTemperature() async {
+  Future<CarwingsCabinTemperature?> requestCabinTemperature() async {
     var response = await session
         .requestWithRetry('GetInteriorTemperatureRequestForNsp.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -285,7 +302,7 @@ class CarwingsVehicle {
       'tz': session.timeZone
     });
 
-    CarwingsCabinTemperature carwingsCabinTemperature;
+    CarwingsCabinTemperature? carwingsCabinTemperature;
 
     int retries = MAX_RETRIES;
     while (responseValidHandler(response, retries: retries--)) {
@@ -298,10 +315,11 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsCabinTemperature> _getCabinTemperature(
+  Future<CarwingsCabinTemperature?> _getCabinTemperature(
       String resultKey) async {
     var response = await session
         .requestWithRetry('GetInteriorTemperatureResultForNsp.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -316,9 +334,10 @@ class CarwingsVehicle {
     return null;
   }
 
-  Future<CarwingsBattery> requestBatteryStatusLatest() async {
+  Future<CarwingsBattery?> requestBatteryStatusLatest() async {
     var response =
         await session.requestWithRetry('BatteryStatusRecordsRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -331,8 +350,9 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsLocation> requestLocation() async {
+  Future<CarwingsLocation?> requestLocation() async {
     var response = await session.requestWithRetry('MyCarFinderRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,
@@ -341,7 +361,7 @@ class CarwingsVehicle {
       'UserId': session.gdcUserId
     });
 
-    CarwingsLocation carwingsLocation;
+    CarwingsLocation? carwingsLocation;
 
     int retries = MAX_RETRIES;
     while (responseValidHandler(response, retries: retries--)) {
@@ -353,9 +373,10 @@ class CarwingsVehicle {
     }
   }
 
-  Future<CarwingsLocation> _getLocationStatus(String resultKey) async {
+  Future<CarwingsLocation?> _getLocationStatus(String resultKey) async {
     var response =
         await session.requestWithRetry('MyCarFinderResultRequest.php', {
+      'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
       'lg': session.language,
       'DCMID': session.dcmId,

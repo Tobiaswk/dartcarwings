@@ -1,8 +1,8 @@
 class CarwingsHVAC {
-  bool isRunning;
-  var preACTemp;
-  var preACTempUnit;
-  var incTemp;
+  late bool isRunning;
+  late var preACTemp;
+  late var preACTempUnit;
+  late var incTemp;
 
   CarwingsHVAC(Map params) {
     var racr = params['RemoteACRecords'];
