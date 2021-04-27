@@ -35,7 +35,7 @@ class CarwingsSession {
   var blowfishEncryptCallback;
 
   late CarwingsVehicle vehicle;
-  List<CarwingsVehicle> vehicles = [];
+  late List<CarwingsVehicle> vehicles;
 
   CarwingsSession({this.debug = false, this.timeZoneOverride});
 
@@ -113,6 +113,7 @@ class CarwingsSession {
 
     loggedIn = true;
 
+    vehicles = <CarwingsVehicle>[];
     // For some odd reason VehicleInfoList is not present on 1th gen Leafs
     // It is only there for 2nd gen Leafs
     if (response['VehicleInfoList'] != null) {
