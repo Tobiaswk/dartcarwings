@@ -1,12 +1,13 @@
+import 'dart:async';
+
+import 'package:dartcarwings/src/carwings_battery.dart';
 import 'package:dartcarwings/src/carwings_cabin_temperature.dart';
-import 'package:dartcarwings/src/carwings_stats_trips.dart';
-import 'package:dartcarwings/src/carwings_stats_daily.dart';
 import 'package:dartcarwings/src/carwings_hvac.dart';
 import 'package:dartcarwings/src/carwings_location.dart';
-import 'package:dartcarwings/src/carwings_stats_monthly.dart';
-import 'package:dartcarwings/src/carwings_battery.dart';
 import 'package:dartcarwings/src/carwings_session.dart';
-import 'dart:async';
+import 'package:dartcarwings/src/carwings_stats_daily.dart';
+import 'package:dartcarwings/src/carwings_stats_monthly.dart';
+import 'package:dartcarwings/src/carwings_stats_trips.dart';
 import 'package:intl/intl.dart';
 
 class CarwingsVehicle {
