@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:blowfish_ecb/blowfish_ecb.dart';
 import 'package:dartcarwings/src/carwings_vehicle.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,7 +13,7 @@ class CarwingsSession {
 
   // Result of the call to InitialApp.php, which appears to
   // always be the same.  It'll probably break at some point but
-  // for now... skip it.
+  // for now... skip it
   final String blowfishKey = 'uyI5Dj9g8VCOFDnBRUbr3g';
 
   // Extracted from the NissanConnect EV app
@@ -33,8 +35,6 @@ class CarwingsSession {
   var dcmId;
   int modelYear = 0;
 
-  var blowfishEncryptCallback;
-
   late CarwingsVehicle vehicle;
   late List<CarwingsVehicle> vehicles;
 
@@ -48,10 +48,7 @@ class CarwingsSession {
     if (status != null && status >= 400) {
       _print('Carwings API; logging in and trying request again: $response');
 
-      await login(
-          username: username,
-          password: password,
-          blowfishEncryptCallback: blowfishEncryptCallback);
+      await login(username: username, password: password);
 
       response = await request(endpoint, params);
     }
@@ -77,21 +74,35 @@ class CarwingsSession {
   Future<CarwingsVehicle> login(
       {required String username,
       required String password,
-      CarwingsRegion region = CarwingsRegion.Europe,
-      required Future<String> blowfishEncryptCallback(
-          String key, String password)}) async {
+      CarwingsRegion region = CarwingsRegion.Europe}) async {
     this.username = username;
     this.password = password;
     this.region = region;
-    this.blowfishEncryptCallback = blowfishEncryptCallback;
 
     loggedIn = false;
 
     var response = await request('InitialApp_v2.php',
         {'RegionCode': _getRegionName(region), 'lg': 'en-US'});
 
+    final blowfish =
+        BlowfishECB(Uint8List.fromList(utf8.encode(response['baseprm'])));
+
+    var padPKCS5 = (List<int> input) {
+      final inputLength = input.length;
+      final paddingValue = 8 - (inputLength % 8);
+      final outputLength = inputLength + paddingValue;
+
+      final output = Uint8List(outputLength);
+      for (var i = 0; i < inputLength; ++i) {
+        output[i] = input[i];
+      }
+      output.fillRange(outputLength - paddingValue, outputLength, paddingValue);
+
+      return output;
+    };
+
     var encodedPassword =
-        await blowfishEncryptCallback(response['baseprm'], password);
+        base64.encode(blowfish.encode(padPKCS5(utf8.encode(password))));
 
     response = await request('UserLoginRequest.php', {
       'RegionCode': _getRegionName(region),

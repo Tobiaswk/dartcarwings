@@ -14,13 +14,7 @@ A simple usage example:
       CarwingsSession session = new CarwingsSession(debug: true);
 
       session
-        .login(
-           username: "username",
-           password: "password",
-           blowfishEncryptCallback: (String key, String password) async {
-             // No native support for Blowfish encryption with Dart
-             // Use external service
-           })
+        .login(username: "username", password: "password")
         .then((vehicle) {
             vehicle.requestBatteryStatus().then((battery) {
                 print(battery.batteryPercentage);
