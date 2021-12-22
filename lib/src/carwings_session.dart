@@ -28,6 +28,8 @@ class CarwingsSession {
   var username;
   var password;
   late CarwingsRegion region;
+  var userAgent =
+      'Dalvik/2.1.0 (Linux; U; Android 5.1.1; Android SDK built for x86 Build/LMY48X)';
   bool loggedIn = false;
   var gdcUserId;
   var timeZoneProvided;
@@ -61,8 +63,11 @@ class CarwingsSession {
     _print('Invoking Carwings API: $endpoint');
     _print('Params: $params');
 
-    http.Response response =
-        await http.post(Uri.parse('${baseUrl}${endpoint}'), body: params);
+    http.Response response = await http.post(Uri.parse('${baseUrl}${endpoint}'),
+        headers: {
+          'User-Agent': userAgent,
+        },
+        body: params);
 
     dynamic jsonData = json.decode(response.body);
 
@@ -74,10 +79,15 @@ class CarwingsSession {
   Future<CarwingsVehicle> login(
       {required String username,
       required String password,
-      CarwingsRegion region = CarwingsRegion.Europe}) async {
+      CarwingsRegion region = CarwingsRegion.Europe,
+      String? userAgent}) async {
     this.username = username;
     this.password = password;
     this.region = region;
+
+    if (userAgent != null) {
+      this.userAgent = userAgent;
+    }
 
     loggedIn = false;
 
