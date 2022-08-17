@@ -125,40 +125,71 @@ class CarwingsSession {
     }
 
     language = response['CustomerInfo']['Language'];
-    gdcUserId = response['vehicle']['profile']['gdcUserId'];
-    dcmId = response['vehicle']['profile']['dcmId'];
-    timeZoneProvided = response['CustomerInfo']['Timezone'];
-    // With more than one vehicle this value makes little sense
-    try {
-      modelYear = int.parse(response['vehicle']['profile']['modelyear']);
-    } catch (e) {}
 
-    loggedIn = true;
+    switch (region) {
+      case CarwingsRegion.World:
+      case CarwingsRegion.USA:
+      case CarwingsRegion.Europe:
+      case CarwingsRegion.Canada:
+      case CarwingsRegion.Australia:
+        gdcUserId = response['vehicle']?['profile']?['gdcUserId'] ?? '';
+        dcmId = response['vehicle']['profile']['dcmId'];
+        timeZoneProvided = response['CustomerInfo']['Timezone'];
+        // With more than one vehicle this value makes little sense
+        try {
+          modelYear = int.parse(response['vehicle']['profile']['modelyear']);
+        } catch (e) {}
 
-    vehicles = <CarwingsVehicle>[];
-    // For some odd reason VehicleInfoList is not present on 1th gen Leafs
-    // It is only there for 2nd gen Leafs
-    if (response['VehicleInfoList'] != null) {
-      for (Map vehicleInfo in response['VehicleInfoList']['vehicleInfo']) {
-        vehicles.add(CarwingsVehicle(
+        loggedIn = true;
+
+        vehicles = <CarwingsVehicle>[];
+        // For some odd reason VehicleInfoList is not present on 1th gen Leafs
+        // It is only there for 2nd gen Leafs
+        if (response['VehicleInfoList'] != null) {
+          for (Map vehicleInfo in response['VehicleInfoList']['vehicleInfo']) {
+            vehicles.add(CarwingsVehicle(
+                this,
+                vehicleInfo['custom_sessionid'],
+                vehicleInfo['vin'],
+                vehicleInfo['nickname'],
+                response['CustomerInfo']['VehicleInfo']['UserVehicleBoundTime'],
+                response['CustomerInfo']['VehicleInfo']['CarName']));
+          }
+        } else {
+          for (Map vehicleInfo in response['vehicleInfo']) {
+            vehicles.add(CarwingsVehicle(
+                this,
+                vehicleInfo['custom_sessionid'],
+                vehicleInfo['vin'],
+                vehicleInfo['nickname'],
+                response['CustomerInfo']['VehicleInfo']['UserVehicleBoundTime'],
+                response['CustomerInfo']['VehicleInfo']['CarName']));
+          }
+        }
+        break;
+      case CarwingsRegion.Japan:
+        gdcUserId = response['vehicle']?['profile']?['gdcUserId'] ?? '';
+        dcmId = response['CustomerInfo']['VehicleInfo']['DCMID'];
+        timeZoneProvided = response['CustomerInfo']['Timezone'];
+
+        loggedIn = true;
+
+        vehicles = <CarwingsVehicle>[];
+        if (response['CustomerInfo']['VehicleInfo'] != null) {
+          var vehicleInfo = response['CustomerInfo']['VehicleInfo'];
+          vehicles.add(CarwingsVehicle(
             this,
             vehicleInfo['custom_sessionid'],
-            vehicleInfo['vin'],
-            vehicleInfo['nickname'],
-            response['CustomerInfo']['VehicleInfo']['UserVehicleBoundTime'],
-            response['CustomerInfo']['VehicleInfo']['CarName']));
-      }
-    } else {
-      for (Map vehicleInfo in response['vehicleInfo']) {
-        vehicles.add(CarwingsVehicle(
-            this,
-            vehicleInfo['custom_sessionid'],
-            vehicleInfo['vin'],
-            vehicleInfo['nickname'],
-            response['CustomerInfo']['VehicleInfo']['UserVehicleBoundTime'],
-            response['CustomerInfo']['VehicleInfo']['CarName']));
-      }
+            vehicleInfo['VIN'],
+            response['CustomerInfo']['Nickname'],
+            vehicleInfo['UserVehicleBoundTime'],
+            vehicleInfo['CarName'],
+          ));
+        } else {
+          throw 'Login error';
+        }
     }
+
     vehicle = vehicles.first;
 
     return vehicle;
