@@ -23,45 +23,14 @@ class CarwingsBattery {
   String? chargingkWLevelText;
   String? chargingRemainingText;
 
-  CarwingsBattery(Map params) {
-    //this.timeStamp = new DateFormat('yyyy-MM-dd H:m:s').parse(params['timeStamp']);
-    this.dateTime = DateTime.now(); // Always now
-    this.batteryLevelCapacity = double.parse(params['batteryCapacity']);
-    this.batteryLevel = double.parse(params['batteryDegradation']);
-    this.isConnected = params['pluginState'] != 'NOT_CONNECTED';
-    this.isCharging = params['charging'] == 'YES';
-    this.isQuickCharging = params['chargeMode'] == 'RAPIDLY_CHARGING';
-    this.isConnectedToQuickCharging = params['pluginState'] == 'QC_CONNECTED';
-    this.batteryPercentage =
-        ((this.batteryLevel * 100) / this.batteryLevelCapacity).toString() +
-            '%';
-    this.cruisingRangeAcOffKm =
-        numberFormat.format(double.parse(params['cruisingRangeAcOff']) / 1000) +
-            ' km';
-    this.cruisingRangeAcOffMiles = numberFormat
-            .format(double.parse(params['cruisingRangeAcOff']) * 0.0006213712) +
-        ' mi';
-    this.cruisingRangeAcOnKm =
-        numberFormat.format(double.parse(params['cruisingRangeAcOn']) / 1000) +
-            ' km';
-    this.cruisingRangeAcOnMiles = numberFormat
-            .format(double.parse(params['cruisingRangeAcOn']) * 0.0006213712) +
-        ' mi';
-    this.timeToFullTrickle =
-        Duration(minutes: _timeRemaining(params['TimeRequiredToFull']));
-    this.timeToFullL2 =
-        Duration(minutes: _timeRemaining(params['TimeRequiredToFull200']));
-    this.timeToFullL2_6kw =
-        Duration(minutes: _timeRemaining(params['TimeRequiredToFull200_6kW']));
-  }
-
   CarwingsBattery.batteryLatest(Map params) {
     var recs = params['BatteryStatusRecords'];
     var bs = recs['BatteryStatus'];
 
-    // TargetDate or NotificationDateAndTime needs to be used in the future
-    // These are in UTC
-    // Until better timezone support has been added to Dart this will do
+    /// "TargetDate" or "NotificationDateAndTime" needs to be used in the future
+    /// These are in UTC
+    /// This looks ugly but the API has some strange behavior that we have to
+    /// deal with.
     try {
       this.dateTime = DateFormat('yyyy/MM/dd H:m')
           .parse(recs['TargetDate'], true)
@@ -104,18 +73,39 @@ class CarwingsBattery {
             .format((this.batteryLevel * 100) / this.batteryLevelCapacity)
             .toString() +
         '%';
-    // If SOC is available; use it
+
+    // If "SOC" is available; use it
     if (bs['SOC'] != null && bs['SOC']['Value'] != null) {
       double SOC = double.parse(bs['SOC']['Value']);
       this.batteryPercentage = NumberFormat('0.0').format(SOC).toString() + '%';
     }
     if (batteryLevelCapacity >= 0.0 && batteryLevelCapacity <= 12.0) {
-      // Leaf using 12th bar system; present as 12ths; 5/12 etc.
-      // batteryLevelCapacity can be lower than 12 because of degradation
-      // we explicitly use 12 instead of batteryLevelCapacity
+      /// Leaf using 12th bar system; present as 12ths; 5/12 etc.
+      /// [batteryLevelCapacity] can be lower than 12 because of degradation
+      /// We explicitly use 12 instead of [batteryLevelCapacity]
       this.battery12thBar = '${numberFormat.format(batteryLevel)} / 12';
+
+      /// Although we have the [battery12thBar] we also calculate a battery
+      /// percentage.
+      /// The notation below has been taken from;
+      ///   https://www.mynissanleaf.com/viewtopic.php?t=2390
+      /// Specifically we use the "Driving" "Low" notation.
       this.batteryPercentage = NumberFormat('0.0')
-              .format((this.batteryLevel * 100) / 12)
+              .format({
+                12: 92,
+                11: 84,
+                10: 78,
+                9: 71,
+                8: 64,
+                7: 57,
+                6: 51,
+                5: 44,
+                4: 36,
+                3: 29,
+                2: 22,
+                1: 15,
+                0: 8,
+              }[batteryLevel])
               .toString() +
           '%';
     }

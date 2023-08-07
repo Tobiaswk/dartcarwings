@@ -42,19 +42,18 @@ class CarwingsVehicle {
       'UserId': session.gdcUserId
     });
 
-    CarwingsBattery? battery;
-
     int retries = MAX_RETRIES;
     while (responseValidHandler(response, retries: retries--)) {
-      battery = await _getBatteryStatus(response['resultKey']);
-      if (battery != null) {
-        return battery;
+      if (await _getBatteryStatus(response['resultKey'])) {
+        return requestBatteryStatusLatest();
       }
       await waitForResponse();
     }
+
+    return null;
   }
 
-  Future<CarwingsBattery?> _getBatteryStatus(String resultKey) async {
+  Future<bool> _getBatteryStatus(String resultKey) async {
     var response =
         await session.requestWithRetry('BatteryStatusCheckResultRequest.php', {
       'custom_sessionid': customSessionID ?? '',
@@ -65,13 +64,11 @@ class CarwingsVehicle {
       'tz': session.timeZone,
       'resultKey': resultKey
     });
-    if (responseFlagHandler(response)) {
-      return CarwingsBattery(response);
-    }
-    return null;
+
+    return responseFlagHandler(response);
   }
 
-  Future<Null> requestClimateControlOn() async {
+  Future requestClimateControlOn() async {
     var response = await session.requestWithRetry('ACRemoteRequest.php', {
       'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
@@ -101,13 +98,11 @@ class CarwingsVehicle {
       'UserId': session.gdcUserId,
       'resultKey': resultKey
     });
-    if (responseFlagHandler(response)) {
-      return true;
-    }
-    return false;
+
+    return responseFlagHandler(response);
   }
 
-  Future<Null> requestClimateControlOff() async {
+  Future requestClimateControlOff() async {
     var response = await session.requestWithRetry('ACRemoteOffRequest.php', {
       'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
@@ -137,15 +132,13 @@ class CarwingsVehicle {
       'UserId': session.gdcUserId,
       'resultKey': resultKey
     });
-    if (responseFlagHandler(response)) {
-      return true;
-    }
-    return false;
+
+    return responseFlagHandler(response);
   }
 
   // For some weird reason ExecuteTime is always in UTC/GMT
   // regardless of tz
-  Future<Null> requestClimateControlSchedule(DateTime startTime) async {
+  Future<bool> requestClimateControlSchedule(DateTime startTime) async {
     var response = await session.requestWithRetry('ACRemoteUpdateRequest.php', {
       'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
@@ -155,12 +148,11 @@ class CarwingsVehicle {
       'tz': session.timeZone,
       'ExecuteTime': _executeTimeFormatter.format(startTime.toUtc()),
     });
-    if (responseValidHandler(response)) {
-      return;
-    }
+
+    return responseValidHandler(response);
   }
 
-  Future<Null> requestClimateControlScheduleCancel() async {
+  Future<bool> requestClimateControlScheduleCancel() async {
     var response = await session.requestWithRetry('ACRemoteCancelRequest.php', {
       'custom_sessionid': customSessionID ?? '',
       'RegionCode': session.getRegion(),
@@ -169,9 +161,8 @@ class CarwingsVehicle {
       'VIN': vin,
       'tz': session.timeZone
     });
-    if (responseValidHandler(response)) {
-      return;
-    }
+
+    return responseValidHandler(response);
   }
 
   // For some weird reason DisplayExecuteTime returns time in local time zone
@@ -186,6 +177,7 @@ class CarwingsVehicle {
       'VIN': vin,
       'tz': session.timeZone
     });
+
     if (responseValidHandler(response)) {
       if (response['ExecuteTime'] != '') {
         return _executeTimeFormatter
@@ -193,11 +185,13 @@ class CarwingsVehicle {
             .toLocal();
       }
     }
+
+    return null;
   }
 
   // For some weird reason ExecuteTime is always in UTC/GMT
   // regardless of tz
-  Future<Null> requestChargingStart(DateTime startTime) async {
+  Future<bool> requestChargingStart(DateTime startTime) async {
     var response =
         await session.requestWithRetry('BatteryRemoteChargingRequest.php', {
       'custom_sessionid': customSessionID ?? '',
@@ -208,9 +202,8 @@ class CarwingsVehicle {
       'tz': session.timeZone,
       'ExecuteTime': _executeTimeFormatter.format(startTime.toUtc())
     });
-    if (responseValidHandler(response)) {
-      return;
-    }
+
+    return responseValidHandler(response);
   }
 
   Future<CarwingsStatsMonthly?> requestStatisticsMonthly(DateTime month) async {
@@ -224,9 +217,12 @@ class CarwingsVehicle {
       'tz': session.timeZone,
       'TargetMonth': _targetMonthFormatter.format(month)
     });
+
     if (responseValidHandler(response)) {
       return CarwingsStatsMonthly(response);
     }
+
+    return null;
   }
 
   Future<CarwingsStatsTrips?> requestStatisticsMonthlyTrips(
@@ -241,9 +237,12 @@ class CarwingsVehicle {
       'tz': session.timeZone,
       'TargetMonth': _targetMonthFormatter.format(month)
     });
+
     if (responseValidHandler(response)) {
       return CarwingsStatsTrips(response);
     }
+
+    return null;
   }
 
   Future<CarwingsStatsDaily?> requestStatisticsDaily() async {
@@ -256,9 +255,12 @@ class CarwingsVehicle {
       'VIN': vin,
       'tz': session.timeZone
     });
+
     if (responseValidHandler(response)) {
       return CarwingsStatsDaily(response);
     }
+
+    return null;
   }
 
   Future<CarwingsHVAC?> requestHVACStatus() async {
@@ -272,9 +274,12 @@ class CarwingsVehicle {
       'tz': session.timeZone,
       'TimeFrom': boundTime
     });
+
     if (responseValidHandler(response)) {
       return CarwingsHVAC(response);
     }
+
+    return null;
   }
 
   Future<CarwingsCabinTemperature?> requestCabinTemperatureLatest() async {
@@ -287,9 +292,12 @@ class CarwingsVehicle {
       'tz': session.timeZone,
       'TimeFrom': boundTime
     });
+
     if (responseValidHandler(response)) {
       return CarwingsCabinTemperature.latest(response);
     }
+
+    return null;
   }
 
   Future<CarwingsCabinTemperature?> requestCabinTemperature() async {
@@ -314,6 +322,8 @@ class CarwingsVehicle {
       }
       await waitForResponse();
     }
+
+    return null;
   }
 
   Future<CarwingsCabinTemperature?> _getCabinTemperature(
@@ -329,9 +339,11 @@ class CarwingsVehicle {
       'UserId': session.gdcUserId,
       'resultKey': resultKey
     });
+
     if (responseFlagHandler(response)) {
       return CarwingsCabinTemperature(response);
     }
+
     return null;
   }
 
@@ -346,9 +358,12 @@ class CarwingsVehicle {
       'tz': session.timeZone,
       'TimeFrom': boundTime
     });
+
     if (responseValidHandler(response)) {
       return CarwingsBattery.batteryLatest(response);
     }
+
+    return null;
   }
 
   Future<CarwingsLocation?> requestLocation() async {
@@ -372,6 +387,8 @@ class CarwingsVehicle {
       }
       await waitForResponse();
     }
+
+    return null;
   }
 
   Future<CarwingsLocation?> _getLocationStatus(String resultKey) async {
@@ -385,9 +402,11 @@ class CarwingsVehicle {
       'tz': session.timeZone,
       'resultKey': resultKey
     });
+
     if (responseFlagHandler(response)) {
       return CarwingsLocation(response['lat'], response['lng']);
     }
+
     return null;
   }
 
@@ -398,7 +417,7 @@ class CarwingsVehicle {
       ? throw 'Error'
       : response['responseFlag'] == '1';
 
-  Future<Null> waitForResponse({waitSeconds = 5}) {
+  Future waitForResponse({waitSeconds = 5}) {
     return Future.delayed(Duration(seconds: waitSeconds));
   }
 }
