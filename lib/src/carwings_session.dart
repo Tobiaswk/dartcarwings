@@ -29,7 +29,7 @@ class CarwingsSession {
   var password;
   late CarwingsRegion region;
   var userAgent =
-      'Dalvik/2.1.0 (Linux; U; Android 5.1.1; Android SDK built for x86 Build/LMY48X)';
+      'Dalvik/2.1.0 (Linux; U; Android 12; SM-A426N Build/SP1A.210812.016)';
   bool loggedIn = false;
   var gdcUserId;
   var timeZoneProvided;
