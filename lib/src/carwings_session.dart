@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 enum CarwingsRegion { World, USA, Europe, Canada, Australia, Japan }
 
 class CarwingsSession {
-  final String baseUrl = 'https://gdcportalgw.its-mo.com/api_v230317_NE/gdc/';
+  final String baseUrl = 'https://gdcportalgw.its-mo.com/api_v250205_NE/gdc/';
 
   // Result of the call to InitialApp.php, which appears to
   // always be the same.  It'll probably break at some point but
