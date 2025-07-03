@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:dartcarwings/src/carwings_vehicle.dart';
 import 'package:http/http.dart' as http;
 import 'package:pointycastle/export.dart';
-import 'package:pointycastle/pointycastle.dart';
 
 enum CarwingsRegion { World, USA, Europe, Canada, Australia, Japan }
 
