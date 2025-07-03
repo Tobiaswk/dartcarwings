@@ -16,21 +16,21 @@ class CarwingsSession {
 
   Uint8List _encryptAES256CBC(String input) {
     final cipher = 'AES/CBC/PKCS7';
-    final cipherKey = 'H9YsaE6mr3jBEsAaLC4EJRjn9VXEtTzV';
-    final cipherIv = 'xaX4ui2PLnwqcc74';
-
-    final paddedCipher = PaddedBlockCipher(cipher);
+    final cipherKey = 'H9YsaE6mr3jBEsAaLC4EJRjn9VXEtTzV'; // BuildConfig.PS
+    final cipherIv = 'xaX4ui2PLnwqcc74'; // BuildConfig.IV
 
     final params = PaddedBlockCipherParameters(
       ParametersWithIV(
           KeyParameter(Uint8List.fromList(
-            utf8.encode(cipherKey), // BuildConfig.PS
+            utf8.encode(cipherKey),
           )),
           Uint8List.fromList(
-            utf8.encode(cipherIv), // BuildConfig.IV
+            utf8.encode(cipherIv),
           )),
       null,
     );
+
+    final paddedCipher = PaddedBlockCipher(cipher);
 
     paddedCipher.init(true, params);
 
