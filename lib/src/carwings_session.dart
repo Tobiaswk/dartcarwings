@@ -20,21 +20,15 @@ class CarwingsSession {
     final cipherIv = 'xaX4ui2PLnwqcc74'; // BuildConfig.IV
 
     final params = PaddedBlockCipherParameters(
-      ParametersWithIV(
-          KeyParameter(Uint8List.fromList(
-            utf8.encode(cipherKey),
-          )),
-          Uint8List.fromList(
-            utf8.encode(cipherIv),
-          )),
-      null,
-    );
+        ParametersWithIV(
+            KeyParameter(utf8.encode(cipherKey)), utf8.encode(cipherIv)),
+        null);
 
     final paddedCipher = PaddedBlockCipher(cipher);
 
     paddedCipher.init(true, params);
 
-    return paddedCipher.process(Uint8List.fromList(utf8.encode(input)));
+    return paddedCipher.process(utf8.encode(input));
   }
 
   bool debug;
