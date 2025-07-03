@@ -2,22 +2,40 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:blowfish_ecb/blowfish_ecb.dart';
 import 'package:dartcarwings/src/carwings_vehicle.dart';
 import 'package:http/http.dart' as http;
+import 'package:pointycastle/export.dart';
+import 'package:pointycastle/pointycastle.dart';
 
 enum CarwingsRegion { World, USA, Europe, Canada, Australia, Japan }
 
 class CarwingsSession {
   final String baseUrl = 'https://gdcportalgw.its-mo.com/api_v250205_NE/gdc/';
 
-  // Result of the call to InitialApp.php, which appears to
-  // always be the same.  It'll probably break at some point but
-  // for now... skip it
-  final String blowfishKey = 'uyI5Dj9g8VCOFDnBRUbr3g';
-
-  // Extracted from the NissanConnect EV app
   final String initialAppStrings = '9s5rfKVuMrT03RtzajWNcA';
+
+  Uint8List _encryptAES256CBC(String input) {
+    final cipher = 'AES/CBC/PKCS7';
+    final cipherKey = 'H9YsaE6mr3jBEsAaLC4EJRjn9VXEtTzV';
+    final cipherIv = 'xaX4ui2PLnwqcc74';
+
+    final paddedCipher = PaddedBlockCipher(cipher);
+
+    final params = PaddedBlockCipherParameters(
+      ParametersWithIV(
+          KeyParameter(Uint8List.fromList(
+            utf8.encode(cipherKey), // BuildConfig.PS
+          )),
+          Uint8List.fromList(
+            utf8.encode(cipherIv), // BuildConfig.IV
+          )),
+      null,
+    );
+
+    paddedCipher.init(true, params);
+
+    return paddedCipher.process(Uint8List.fromList(utf8.encode(input)));
+  }
 
   bool debug;
   List<String> debugLog = <String>[];
@@ -91,30 +109,9 @@ class CarwingsSession {
 
     loggedIn = false;
 
-    var response = await request('InitialApp_v2.php',
-        {'RegionCode': _getRegionName(region), 'lg': 'en-US'});
+    var encodedPassword = base64.encode(_encryptAES256CBC(password));
 
-    final blowfish =
-        BlowfishECB(Uint8List.fromList(utf8.encode(response['baseprm'])));
-
-    var padPKCS5 = (List<int> input) {
-      final inputLength = input.length;
-      final paddingValue = 8 - (inputLength % 8);
-      final outputLength = inputLength + paddingValue;
-
-      final output = Uint8List(outputLength);
-      for (var i = 0; i < inputLength; ++i) {
-        output[i] = input[i];
-      }
-      output.fillRange(outputLength - paddingValue, outputLength, paddingValue);
-
-      return output;
-    };
-
-    var encodedPassword =
-        base64.encode(blowfish.encode(padPKCS5(utf8.encode(password))));
-
-    response = await request('UserLoginRequest.php', {
+    var response = await request('UserLoginRequest.php', {
       'RegionCode': _getRegionName(region),
       'UserId': username,
       'Password': encodedPassword
