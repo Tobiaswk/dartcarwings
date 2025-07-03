@@ -87,11 +87,12 @@ class CarwingsSession {
     return jsonData;
   }
 
-  Future<CarwingsVehicle> login(
-      {required String username,
-      required String password,
-      CarwingsRegion region = CarwingsRegion.Europe,
-      String? userAgent}) async {
+  Future<CarwingsVehicle> login({
+    required String username,
+    required String password,
+    CarwingsRegion region = CarwingsRegion.Europe,
+    String? userAgent,
+  }) async {
     this.username = username;
     this.password = password;
     this.region = region;
@@ -102,12 +103,10 @@ class CarwingsSession {
 
     loggedIn = false;
 
-    var encodedPassword = base64.encode(_encryptAES256CBC(password));
-
     var response = await request('UserLoginRequest.php', {
       'RegionCode': _getRegionName(region),
       'UserId': username,
-      'Password': encodedPassword
+      'Password': base64.encode(_encryptAES256CBC(password)),
     });
 
     if (response['status'] != 200) {
